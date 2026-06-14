@@ -101,29 +101,47 @@ async function interpret(velma, llmKey) {
     'Velma output (JSON):\n' + JSON.stringify(velma).slice(0, 12000) +
     '\n\nReturn ONLY JSON in exactly this shape:\n' + shape;
 
-  const r = await fetch(ANTHROPIC_URL, {
-    method: 'POST',
-    headers: {
-      'x-api-key': llmKey,
-      'anthropic-version': '2023-06-01',
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      max_tokens: 700,
-      system,
-      messages: [{ role: 'user', content: user }],
-    }),
-  });
+  // Try the configured model first, then fall back to known-good model ids.
+  const models = [...new Set([MODEL,
+    'claude-haiku-4-5-20251001',
+    'claude-3-5-haiku-20241022',
+    'claude-3-5-sonnet-20241022'].filter(Boolean))];
 
-  if (!r.ok) {
-    const t = await r.text();
-    throw new Error('llm_' + r.status + ': ' + t.slice(0, 200));
+  let lastErr = 'llm_failed';
+  for (const model of models) {
+    try {
+      const r = await fetch(ANTHROPIC_URL, {
+        method: 'POST',
+        headers: {
+          'x-api-key': llmKey,
+          'anthropic-version': '2023-06-01',
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({ model, max_tokens: 700, system, messages: [{ role: 'user', content: user }] }),
+      });
+      if (!r.ok) {
+        const t = await r.text();
+        lastErr = 'llm_' + r.status + ' (' + model + '): ' + t.slice(0, 160);
+        continue;
+      }
+      const data = await r.json();
+      const out = (data.content && data.content[0] && data.content[0].text) || '';
+      const parsed = extractJson(out);
+      if (parsed && parsed.story) return parsed;
+      lastErr = 'llm_bad_shape (' + model + ')';
+    } catch (e) {
+      lastErr = String((e && e.message) || e) + ' (' + model + ')';
+    }
   }
-  const data = await r.json();
-  let out = (data.content && data.content[0] && data.content[0].text) || '';
-  out = out.trim().replace(/^```(?:json)?\s*/i, '').replace(/```$/, '').trim();
-  const parsed = JSON.parse(out);
-  if (!parsed || !parsed.story) throw new Error('llm_bad_shape');
-  return parsed;
+  throw new Error(lastErr);
+}
+
+// Forgiving JSON extraction from a model response.
+function extractJson(s) {
+  if (!s) return null;
+  let t = s.trim().replace(/^```(?:json)?\s*/i, '').replace(/```$/, '').trim();
+  try { return JSON.parse(t); } catch (e) {}
+  const a = t.indexOf('{'), b = t.lastIndexOf('}');
+  if (a >= 0 && b > a) { try { return JSON.parse(t.slice(a, b + 1)); } catch (e) {} }
+  return null;
 }
