@@ -86,6 +86,7 @@
 
   .footnote{text-align:center;font-size:11px;color:var(--ink-soft);margin-top:24px;line-height:1.6;}
   .err{background:#fbeee6;border:1px solid #f0d9c9;border-radius:10px;padding:10px 13px;font-size:13px;color:#8a3f22;margin-bottom:14px;}
+  pre.dbg{background:#1f1c18;color:#e7ddca;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;line-height:1.45;padding:12px 14px;border-radius:10px;overflow:auto;max-height:240px;white-space:pre-wrap;word-break:break-word;margin:0 0 6px;}
   .fadein{animation:fade .4s ease;}@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
 </style>
 </head>
@@ -131,6 +132,22 @@ const app = document.getElementById('app');
 function render(html){ app.innerHTML=''; const d=document.createElement('div'); d.className='card fadein'; d.innerHTML=html; app.appendChild(d); }
 function cap(s){ s=String(s||''); return s.charAt(0).toUpperCase()+s.slice(1); }
 function fmt(s){ const m=Math.floor(s/60); const r=s%60; return m+':'+(r<10?'0':'')+r; }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function toggleDebug(){
+  const d=document.getElementById('debug'); if(!d) return;
+  if(d.style.display!=='none'){ d.style.display='none'; return; }
+  d.innerHTML = turns.map((t,i)=>{
+    const v = (t.raw && t.raw.velma) ? JSON.stringify(t.raw.velma,null,2) : '(simulated answer — no live Velma data)';
+    const ci = (t.raw && t.raw.interpreted) ? JSON.stringify(t.raw.interpreted,null,2) : '(no Claude read for this answer)';
+    const ce = (t.raw && t.raw.interpErr) ? ('\n\nClaude error: ' + t.raw.interpErr) : '';
+    return `<div class="sectlabel">Answer ${i+1} · ${esc(t.q)}</div>
+      <div class="hint" style="text-align:left;margin:0 0 4px;">What Velma sent back</div>
+      <pre class="dbg">${esc(v)}</pre>
+      <div class="hint" style="text-align:left;margin:8px 0 4px;">What Claude wrote from it</div>
+      <pre class="dbg">${esc(ci + ce)}</pre>`;
+  }).join('');
+  d.style.display='block';
+}
 function setBadge(live){ const b=document.getElementById('badge'); b.classList.toggle('live',!!live); document.getElementById('badgetext').textContent = live?'Live Velma':'Simulated'; }
 
 /* ---------- text to speech (Kin speaks) ---------- */
@@ -269,26 +286,26 @@ function screenAnalyzing(){
 
 async function analyze(blob){
   screenAnalyzing();
-  let payload=null, live=false;
+  let payload=null, live=false, raw=null;
   if(blob){
     try{
       const res=await fetch(ANALYZE_URL,{method:'POST',headers:{'Content-Type': blob.type||'audio/webm'},body:blob});
       const data=await res.json().catch(()=>({}));
       if(res.ok && data.configured && data.velma){
         payload = (data.interpreted && data.interpreted.story) ? fromInterpreted(data.interpreted) : normalize(data.velma);
-        live=true;
+        live=true; raw={ velma:data.velma, interpreted:data.interpreted||null, interpErr:data.interpErr||'' };
       }
     }catch(e){}
   }
   if(!payload){ payload=simulate(); live=false; }
   setBadge(live);
-  recordTurn(payload, live);
+  recordTurn(payload, live, raw);
 }
-function sampleAnswer(){ stopSpeak(); screenAnalyzing(); setBadge(false); setTimeout(()=>recordTurn(simulate(),false),900); }
+function sampleAnswer(){ stopSpeak(); screenAnalyzing(); setBadge(false); setTimeout(()=>recordTurn(simulate(),false,null),900); }
 
-function recordTurn(payload, live){
+function recordTurn(payload, live, raw){
   if(live) flowLive=true;
-  turns.push({ q:curQuestion(), payload, live });
+  turns.push({ q:curQuestion(), payload, live, raw:raw||null });
   if(payload._followUp) lastFollowUp=payload._followUp;
   if(stepIdx < STEPS.length-1){ stepIdx++; setTimeout(screenQuestion, live?200:650); }
   else { screenSynth(); }
@@ -362,6 +379,8 @@ function screenClone(c){
       </div>
     </div>
     <div class="stack"><button class="btn btn-primary" onclick="screenWelcome()">Start over</button></div>
+    <div style="text-align:center;margin-top:14px;"><button class="badge" onclick="toggleDebug()" style="cursor:pointer;">Show what Velma sent (debug)</button></div>
+    <div id="debug" style="display:none;margin-top:12px;"></div>
   `);
   speak(c.profileLine || 'Here is the version of you I built.');
 }
