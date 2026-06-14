@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KIN — by The School of Life · Phase 1 Demo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
+
+  :root{
+    --ink:#23201c;
+    --ink-soft:#5b554d;
+    --cream:#f6f1e7;
+    --cream-2:#efe7d8;
+    --paper:#fffdf8;
+    --accent:#b5532f;     /* terracotta */
+    --accent-2:#2f6d6a;   /* deep teal */
+    --gold:#c8943b;
+    --line:#e2d8c5;
+    --good:#2f6d6a;
+    --watch:#c8943b;
+    --soft-shadow:0 18px 50px -24px rgba(40,30,15,.45);
+    --radius:18px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:radial-gradient(120% 120% at 50% 0%, #fbf7ee 0%, var(--cream) 55%, var(--cream-2) 100%);
+    color:var(--ink);
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:32px 22px 80px;}
+  .serif{font-family:'Fraunces',Georgia,serif;}
+
+  /* top brand bar */
+  header.brand{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:6px 2px 22px;
+  }
+  .logo{font-family:'Fraunces',serif;font-weight:600;font-size:26px;letter-spacing:.18em;color:var(--ink);}
+  .logo small{display:block;font-family:'Inter',sans-serif;font-weight:500;letter-spacing:.22em;font-size:10px;color:var(--ink-soft);text-transform:uppercase;margin-top:3px;}
+  .tag-pill{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:var(--paper);}
+
+  .card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--soft-shadow);
+    padding:38px 34px;
+  }
+
+  h1.hero{font-family:'Fraunces',serif;font-weight:500;font-size:40px;line-height:1.08;margin:6px 0 14px;letter-spacing:-.01em;}
+  .lede{font-size:17px;line-height:1.6;color:var(--ink-soft);max-width:54ch;}
+  .micro{font-size:12.5px;letter-spacing:.04em;color:var(--ink-soft);}
+
+  .section-label{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:14px;}
+
+  /* stage cards */
+  .stage-grid{display:grid;gap:14px;margin-top:24px;}
+  .stage{
+    text-align:left;width:100%;cursor:pointer;
+    border:1px solid var(--line);background:var(--paper);
+    border-radius:14px;padding:20px 22px;display:flex;gap:18px;align-items:flex-start;
+    transition:.18s ease;
+  }
+  .stage:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 14px 34px -20px rgba(40,30,15,.4);}
+  .stage .num{font-family:'Fraunces',serif;font-size:30px;color:var(--accent);line-height:1;min-width:34px;}
+  .stage h3{margin:0 0 5px;font-family:'Fraunces',serif;font-weight:500;font-size:21px;}
+  .stage p{margin:0;font-size:14px;color:var(--ink-soft);line-height:1.5;}
+
+  /* mode toggle */
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px;}
+  .mode{
+    cursor:pointer;border:1px solid var(--line);background:var(--paper);border-radius:14px;padding:22px 20px;text-align:left;transition:.18s ease;
+  }
+  .mode:hover{border-color:var(--accent-2);transform:translateY(-2px);}
+  .mode h3{margin:0 0 6px;font-family:'Fraunces',serif;font-weight:500;font-size:19px;}
+  .mode p{margin:0;font-size:13.5px;color:var(--ink-soft);line-height:1.5;}
+  .mode .rec{display:inline-block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:8px;}
+
+  /* avatar / guide */
+  .guide{display:flex;gap:16px;align-items:center;margin-bottom:26px;}
+  .orb{
+    width:58px;height:58px;border-radius:50%;flex:none;position:relative;
+    background:radial-gradient(circle at 32% 30%, #7fb7b2, var(--accent-2) 60%, #1f4e4b 100%);
+    box-shadow:0 0 0 6px rgba(47,109,106,.12), inset 0 0 14px rgba(255,255,255,.25);
+    animation:breathe 4s ease-in-out infinite;
+  }
+  .orb::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 65% 70%, rgba(255,255,255,.35), transparent 45%);}
+  @keyframes breathe{0%,100%{transform:scale(1);}50%{transform:scale(1.045);}}
+  .guide .who{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);}
+  .guide .who b{display:block;font-family:'Fraunces',serif;font-weight:500;font-size:18px;letter-spacing:0;text-transform:none;color:var(--ink);margin-top:2px;}
+
+  /* progress */
+  .prog{display:flex;gap:6px;margin-bottom:24px;}
+  .prog span{height:4px;border-radius:3px;flex:1;background:var(--line);transition:.3s;}
+  .prog span.on{background:var(--accent);}
+  .prog span.done{background:var(--accent-2);}
+
+  .whose{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-2);font-weight:600;margin-bottom:10px;}
+
+  .q-text{font-family:'Fraunces',serif;font-weight:500;font-size:25px;line-height:1.25;margin:0 0 8px;}
+  .q-sub{font-size:14px;color:var(--ink-soft);margin:0 0 22px;line-height:1.55;}
+
+  .opts{display:grid;gap:11px;}
+  .opt{
+    cursor:pointer;border:1px solid var(--line);background:var(--paper);border-radius:13px;
+    padding:16px 18px;font-size:15px;line-height:1.45;color:var(--ink);text-align:left;transition:.15s ease;
+    display:flex;gap:13px;align-items:flex-start;
+  }
+  .opt:hover{border-color:var(--accent);background:#fffaf2;transform:translateX(3px);}
+  .opt .dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--line);flex:none;margin-top:2px;transition:.15s;}
+  .opt:hover .dot{border-color:var(--accent);}
+
+  .btn{
+    cursor:pointer;border:none;border-radius:999px;padding:15px 30px;font-family:'Inter',sans-serif;
+    font-size:15px;font-weight:600;letter-spacing:.01em;transition:.18s ease;
+  }
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 12px 26px -12px rgba(181,83,47,.7);}
+  .btn-primary:hover{background:#9c4527;transform:translateY(-1px);}
+  .btn-ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line);}
+  .btn-ghost:hover{border-color:var(--ink-soft);color:var(--ink);}
+  .row{display:flex;gap:12px;align-items:center;margin-top:26px;flex-wrap:wrap;}
+  .spacer{flex:1;}
+
+  .backlink{background:none;border:none;color:var(--ink-soft);font-size:13px;cursor:pointer;padding:4px 0;margin-bottom:18px;}
+  .backlink:hover{color:var(--accent);}
+
+  /* handoff screen */
+  .handoff{text-align:center;padding:18px 0 6px;}
+  .handoff .big{font-family:'Fraunces',serif;font-size:30px;margin:18px 0 10px;}
+
+  /* report */
+  .band{
+    border-radius:16px;padding:26px 26px 24px;color:#fff;margin-bottom:24px;position:relative;overflow:hidden;
+    background:linear-gradient(135deg,var(--accent-2),#21504e);
+  }
+  .band.mid{background:linear-gradient(135deg,#3a7d79,#7a6a2f);}
+  .band.low{background:linear-gradient(135deg,#8a5a3c,#6d4a3a);}
+  .band .score{font-family:'Fraunces',serif;font-size:54px;line-height:1;margin:0;}
+  .band .score small{font-size:20px;opacity:.7;}
+  .band h2{font-family:'Fraunces',serif;font-weight:500;font-size:23px;margin:10px 0 8px;}
+  .band p{margin:0;font-size:15px;line-height:1.55;opacity:.95;max-width:50ch;}
+  .band .stagetag{position:absolute;top:20px;right:22px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;opacity:.8;}
+
+  .dim{margin-bottom:17px;}
+  .dim .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:7px;}
+  .dim .name{font-family:'Fraunces',serif;font-size:16.5px;}
+  .dim .verdict{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
+  .dim .verdict.good{color:var(--good);}
+  .dim .verdict.watch{color:var(--watch);}
+  .bar{height:9px;border-radius:6px;background:var(--cream-2);overflow:hidden;}
+  .bar i{display:block;height:100%;border-radius:6px;}
+  .dim .note{font-size:13px;color:var(--ink-soft);margin-top:7px;line-height:1.5;}
+
+  .block{border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin-bottom:14px;background:var(--paper);}
+  .block h4{margin:0 0 8px;font-family:'Fraunces',serif;font-weight:500;font-size:18px;}
+  .block.good h4{color:var(--good);}
+  .block.watch h4{color:#a9762a;}
+  .block p{margin:0;font-size:14.5px;line-height:1.6;color:var(--ink-soft);}
+  .block .convo{margin-top:10px;font-style:italic;color:var(--ink);font-family:'Fraunces',serif;font-size:15.5px;line-height:1.5;}
+
+  .verdict-note{font-size:13px;color:var(--ink-soft);text-align:center;margin:22px auto 6px;max-width:46ch;line-height:1.55;}
+
+  .fadein{animation:fade .45s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  .hidden{display:none;}
+
+  .footnote{text-align:center;font-size:11px;color:var(--ink-soft);margin-top:30px;letter-spacing:.03em;}
+  .demoflag{display:inline-block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#a9762a;border:1px solid var(--line);border-radius:999px;padding:4px 10px;background:var(--paper);}
+
+  @media(max-width:560px){
+    .card{padding:28px 20px;}
+    h1.hero{font-size:32px;}
+    .modes{grid-template-columns:1fr;}
+    .band .stagetag{position:static;display:block;margin-bottom:10px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand">
+    <div class="logo">KIN<small>by The School of Life</small></div>
+    <div class="tag-pill">Phase 1 · Concept demo</div>
+  </header>
+
+  <div id="app"></div>
+
+  <div class="footnote">
+    A signal, not a verdict. KIN helps people see in an evening what otherwise takes years.<br>
+    Internal concept prototype · not a finished product · built to spark the next conversation.
+  </div>
+</div>
+
+<script>
+/* ---------------------------------------------------------
+   KIN — Phase 1 interactive concept demo
+   One assessment engine, three relationship-stage framings.
+   The questions are projective ("around the side"), never head-on.
+   The report is computed live from the answers.
+----------------------------------------------------------*/
+
+const STAGES = {
+  first: {
+    key:'first', num:'01', title:'First Date',
+    blurb:'Early days. You like each other. KIN reads beneath the surface and shows what to be aware of before you invest.',
+    intro:'You two are at the beginning. There are no right answers here, we are just getting a feel for how you each move through the world.',
+    reportTitle:'Early compatibility',
+    close:{
+      high:'A genuinely promising start. Go and enjoy it, with your eyes a little more open than most people get to be this early.',
+      mid:'There is real warmth here and a few honest things to notice early, while it costs nothing to notice them.',
+      low:'Early days are exactly the right time to see this clearly. Nothing here says stop, it says go in curious.'
+    }
+  },
+  tenth: {
+    key:'tenth', num:'02', title:'Tenth Date',
+    blurb:'You already like each other. The question is whether to go deeper. KIN looks at the long-horizon fit, not the spark.',
+    intro:'You already know you like each other. This is about the longer road. We will go a little deeper than dinner ever does.',
+    reportTitle:'Readiness to go deeper',
+    close:{
+      high:'The foundations for going deeper are here. This is a relationship worth investing the next chapter in.',
+      mid:'You are ready to go deeper on most of what matters, with a couple of conversations worth having first.',
+      low:'Going deeper is a real decision. This shows you where to look hard before you make it, hopefully, not fearfully.'
+    }
+  },
+  stay: {
+    key:'stay', num:'03', title:'Stay or Leave',
+    blurb:'Already together, at a crossroads. KIN assesses the strengths worth protecting and the work that would matter most.',
+    intro:'You have history together. This is not about a verdict on your love. It is about seeing clearly what is strong and what would be worth tending.',
+    reportTitle:'Strengths and the work',
+    close:{
+      high:'There is a great deal worth protecting here. The strongest signal is that the foundation is sound.',
+      mid:'There is real substance to build on, alongside honest work that could change the next decade together.',
+      low:'This is a relationship with hard edges and real ground to stand on. The point is not whether to stay, it is what would have to be true to thrive.'
+    }
+  }
+};
+
+/* Five projective questions. Each option carries hidden deltas.
+   Dimensions: secure (felt security), repair (conflict repair),
+   coop (cooperation), open (vulnerability), and a 'pull' value
+   on a security(0) <-> adventure(100) life-direction spectrum. */
+const QUESTIONS = [
+  {
+    q:'A couple set out on a long coastal walk. The path vanishes as the light fades and it starts to rain. In your mind, what happens next?',
+    sub:'Just say the first version that feels true.',
+    opts:[
+      {t:'They figure it out together, half-laughing, and find their way back.', d:{coop:18,repair:14,secure:10}},
+      {t:'One quietly takes charge and leads them out while the other follows.', d:{coop:4,secure:8}},
+      {t:'They snap at each other about who chose the route, then cool off.', d:{repair:-12,open:10}},
+      {t:'They go silent, each privately anxious, and barely speak until home.', d:{open:-14,secure:-12,coop:-8}},
+    ]
+  },
+  {
+    q:'Your partner comes home clearly low but says, "I am fine, really." What is most like you?',
+    sub:'',
+    opts:[
+      {t:'I stay close and let them know I am here whenever they are ready.', d:{secure:16,repair:12}},
+      {t:'I keep asking what is wrong until they tell me.', d:{open:8,secure:-10}},
+      {t:'I give them plenty of space and wait for them to come to me.', d:{secure:-2,open:-10}},
+      {t:'I assume it is somehow about me and start to worry.', d:{secure:-16,open:6}},
+    ]
+  },
+  {
+    q:'Picture a hard year together. A parent dies, money gets tight. Honestly, you see yourself...',
+    sub:'The cinema is easy. Weather is the real test.',
+    opts:[
+      {t:'Pulling closer and becoming the steady one.', d:{secure:16,repair:12,coop:8}},
+      {t:'Struggling, but staying, even when it is heavy.', d:{secure:10,open:12}},
+      {t:'Getting irritable and needing to retreat alone to cope.', d:{secure:-10,repair:-10,open:-6}},
+      {t:'Honestly unsure how well I would hold up.', d:{secure:-8,open:14}},
+    ]
+  },
+  {
+    q:'When you imagine the good life five years from now, what is most vivid?',
+    sub:'',
+    opts:[
+      {t:'A settled, close home and a few deep friendships.', d:{pull:-20,secure:6}},
+      {t:'Big ambitions realised, work that genuinely matters.', d:{pull:18}},
+      {t:'Freedom and travel, room to keep changing.', d:{pull:24,open:8}},
+      {t:'A wide, lively social world around us both.', d:{pull:8,coop:4}},
+    ]
+  },
+  {
+    q:'Be honest. How long before someone really sees the unguarded you?',
+    sub:'Most people keep the mask on far longer than they admit.',
+    opts:[
+      {t:'Quickly. I do not hide much.', d:{open:20,secure:6}},
+      {t:'A while. I keep some doors shut at first.', d:{open:2}},
+      {t:'A long time. I show my best self until I deeply trust.', d:{open:-14}},
+      {t:'Honestly, I am not sure I ever fully let people in.', d:{open:-20,secure:-6}},
+    ]
+  }
+];
+
+const DIMS = [
+  {key:'secure', name:'Felt security'},
+  {key:'repair', name:'Repair after rupture'},
+  {key:'coop',   name:'Pulling together'},
+  {key:'open',   name:'Letting the mask drop'},
+];
+
+/* ---------------- state ---------------- */
+let state = { stage:null, mode:null, who:'A', idx:0, answers:{A:[],B:[]} };
+const app = document.getElementById('app');
+
+function clamp(v){return Math.max(4,Math.min(96,v));}
+
+function scoreOf(ans){
+  let s={secure:50,repair:50,coop:50,open:50,pull:50};
+  ans.forEach(o=>{for(const k in o.d){s[k]+=o.d[k];}});
+  for(const k in s) if(k!=='pull') s[k]=clamp(s[k]);
+  s.pull=Math.max(0,Math.min(100,s.pull));
+  return s;
+}
+
+/* ---------------- screens ---------------- */
+function render(html){app.innerHTML='';const d=document.createElement('div');d.className='card fadein';d.innerHTML=html;app.appendChild(d);}
+
+function screenWelcome(){
+  render(`
+    <div class="section-label">Meet and connect at depth</div>
+    <h1 class="hero">Three years of truth,<br>in a single evening.</h1>
+    <p class="lede">It can take years to really know whether two people fit. KIN brings the depth of serious psychology into the relationship itself, and asks the questions a dinner never will. Choose where you are.</p>
+    <div class="stage-grid">
+      ${Object.values(STAGES).map(s=>`
+        <button class="stage" onclick="pickStage('${s.key}')">
+          <span class="num">${s.num}</span>
+          <span><h3>${s.title}</h3><p>${s.blurb}</p></span>
+        </button>`).join('')}
+    </div>
+  `);
+}
+
+function pickStage(k){state.stage=k;state.answers={A:[],B:[]};state.who='A';state.idx=0;screenMode();}
+
+function screenMode(){
+  const s=STAGES[state.stage];
+  render(`
+    <button class="backlink" onclick="screenWelcome()">← Back</button>
+    <div class="section-label">${s.title}</div>
+    <h1 class="hero" style="font-size:30px;">Who is taking part?</h1>
+    <p class="lede" style="margin-bottom:24px;">The real magic is in two people. KIN reads each of you privately, then shows where you meet.</p>
+    <div class="modes">
+      <button class="mode" onclick="pickMode('couple')">
+        <span class="rec">Recommended</span>
+        <h3>Two of us</h3>
+        <p>You each answer on your own. KIN builds a shared compatibility reading from both.</p>
+      </button>
+      <button class="mode" onclick="pickMode('solo')">
+        <h3>Just me</h3>
+        <p>A reading of how you move through relationships, and what you tend to need in a partner.</p>
+      </button>
+    </div>
+  `);
+}
+
+function pickMode(m){state.mode=m;state.who='A';state.idx=0;screenHandoff();}
+
+function screenHandoff(){
+  const s=STAGES[state.stage];
+  const soloLine = state.mode==='solo'
+    ? `This takes a couple of minutes. Answer honestly, the value is entirely in that.`
+    : (state.who==='A'
+        ? `Partner A goes first, privately. When you are done you will hand the screen over.`
+        : `Now Partner B. Answer on your own, without comparing notes yet.`);
+  render(`
+    <div class="guide">
+      <div class="orb"></div>
+      <div class="who">Your guide<b>Kin</b></div>
+    </div>
+    <div class="handoff">
+      <span class="demoflag">${state.mode==='couple' ? 'Partner '+state.who : 'Solo reading'}</span>
+      <div class="big serif">${s.title}</div>
+      <p class="lede" style="margin:0 auto 6px;">${s.intro}</p>
+      <p class="micro" style="margin-top:14px;">${soloLine}</p>
+      <div class="row" style="justify-content:center;">
+        <button class="btn btn-primary" onclick="screenQuestion()">Begin</button>
+      </div>
+    </div>
+  `);
+}
+
+function screenQuestion(){
+  const s=STAGES[state.stage];
+  const Q=QUESTIONS[state.idx];
+  const total=QUESTIONS.length;
+  const dots=Array.from({length:total},(_,i)=>{
+    let cls = i<state.idx?'done':(i===state.idx?'on':'');
+    return `<span class="${cls}"></span>`;
+  }).join('');
+  const whoLabel = state.mode==='couple' ? `Partner ${state.who}` : 'You';
+  render(`
+    <div class="guide">
+      <div class="orb"></div>
+      <div class="who">Kin is listening<b>${s.title}</b></div>
+    </div>
+    <div class="prog">${dots}</div>
+    <div class="whose">${whoLabel} · question ${state.idx+1} of ${total}</div>
+    <p class="q-text serif">${Q.q}</p>
+    ${Q.sub?`<p class="q-sub">${Q.sub}</p>`:'<div style="height:6px"></div>'}
+    <div class="opts">
+      ${Q.opts.map((o,i)=>`
+        <button class="opt" onclick="answer(${i})"><span class="dot"></span><span>${o.t}</span></button>
+      `).join('')}
+    </div>
+  `);
+}
+
+function answer(i){
+  const Q=QUESTIONS[state.idx];
+  state.answers[state.who].push(Q.opts[i]);
+  if(state.idx < QUESTIONS.length-1){ state.idx++; screenQuestion(); return; }
+  // finished this person
+  if(state.mode==='couple' && state.who==='A'){
+    state.who='B'; state.idx=0; screenSwap(); return;
+  }
+  screenReport();
+}
+
+function screenSwap(){
+  render(`
+    <div class="handoff" style="padding:30px 0;">
+      <div class="guide" style="justify-content:center;">
+        <div class="orb"></div>
+      </div>
+      <div class="big serif">Thank you. That stays private.</div>
+      <p class="lede" style="margin:0 auto 4px;">Now pass the screen to Partner B. No peeking at each other's answers, the reading is better for it.</p>
+      <div class="row" style="justify-content:center;">
+        <button class="btn btn-primary" onclick="screenHandoff()">I'm Partner B — continue</button>
+      </div>
+    </div>
+  `);
+}
+
+/* ---------------- report ---------------- */
+function bandClass(score){return score>=74?'':score>=56?'mid':'low';}
+function bandWord(score){return score>=74?'high':score>=56?'mid':'low';}
+
+function dimColor(v){return v>=66?'var(--good)':v>=46?'var(--gold)':'#b5703f';}
+
+function buildReport(){
+  const s=STAGES[state.stage];
+  const A=scoreOf(state.answers.A);
+  const solo = state.mode==='solo';
+  const B = solo? null : scoreOf(state.answers.B);
+
+  // per-dimension joint reading
+  const dimResults = DIMS.map(d=>{
+    if(solo){
+      const v=A[d.key];
+      return {name:d.name, key:d.key, val:v, a:v, b:v,
+        verdict: v>=62?'strength':'growth'};
+    }
+    const avg=Math.round((A[d.key]+B[d.key])/2);
+    const gap=Math.abs(A[d.key]-B[d.key]);
+    // strong if both reasonably high and not wildly mismatched
+    const strong = avg>=60 && gap<=28;
+    return {name:d.name, key:d.key, val:avg, a:A[d.key], b:B[d.key], gap, verdict: strong?'strength':'growth'};
+  });
+
+  // life-direction alignment (pull)
+  let pullNote, pullScore;
+  if(solo){
+    pullScore = A.pull>=55? 70 : 60;
+  } else {
+    const gap=Math.abs(A.pull-B.pull);
+    pullScore = clamp(100 - gap*1.1);
+    pullNote = gap<=18?'You are pointed in broadly the same direction in life.'
+            : gap<=40?'Your pulls in life differ enough to be worth naming, not enough to fear.'
+            : 'You are drawn toward quite different lives. That is workable, but only if it is spoken about.';
+  }
+
+  // overall score
+  let overall;
+  if(solo){
+    overall = Math.round((A.secure*0.3 + A.repair*0.25 + A.coop*0.2 + A.open*0.25));
+  } else {
+    const dimAvg = dimResults.reduce((s,d)=>s+d.val,0)/dimResults.length;
+    overall = Math.round(dimAvg*0.78 + pullScore*0.22);
+  }
+
+  const strengths = dimResults.filter(d=>d.verdict==='strength').sort((a,b)=>b.val-a.val);
+  const growth = dimResults.filter(d=>d.verdict==='growth').sort((a,b)=>a.val-b.val);
+
+  const convoMap = {
+    secure:'When one of us is low and says "I\'m fine," what do we actually want from the other in that moment?',
+    repair:'After we argue, who tends to reach back first, and does the other one notice?',
+    coop:'When a plan falls apart, do we become a team or two soloists?',
+    open:'What is one thing about you I still have not really seen?'
+  };
+
+  const strengthCopy = {
+    secure:'You tend to make each other feel safe. When one wobbles, the other steadies rather than scatters.',
+    repair:'You both lean toward repair. Ruptures get mended instead of banked, which is the single best predictor of lasting.',
+    coop:'Under pressure you pull together. Lost paths become shared adventures, not blame.',
+    open:'You let the mask drop relatively early. The truth of you arrives sooner, which saves wasted years.'
+  };
+  const growthCopy = {
+    secure:'Felt security is the area to tend. One or both of you can read silence as threat, which quietly drains trust over time.',
+    repair:'Repair is the work. The risk is not the arguments, it is letting them harden instead of healing.',
+    coop:'Pulling together under strain is the stretch. In calm weather you are fine, in storms you may drift to separate corners.',
+    open:'Openness is the slow road here. If both of you keep the best self up, the real fit stays hidden far longer than you have years for.'
+  };
+
+  return {s, A, B, solo, dimResults, overall, strengths, growth, pullScore, pullNote, convoMap, strengthCopy, growthCopy};
+}
+
+function screenReport(){
+  const r=buildReport();
+  const bw=bandWord(r.overall);
+  const s=r.s;
+
+  const headline = r.solo
+    ? 'Your relational signature'
+    : (r.overall>=74?'Strong foundations':r.overall>=56?'Promising, with real things to tend':'Worth going in clear-eyed');
+
+  const lead = r.solo
+    ? 'Here is how you tend to move through closeness, and what that means for the partner who suits you.'
+    : (r.overall>=74? 'The signals point to a genuine, durable fit. Not perfect, nothing is, but well above the coin-toss most people rely on.'
+      : r.overall>=56? 'There is real warmth and compatibility here, alongside a couple of honest places worth attention while attention is cheap.'
+      : 'There is something real between you, and some genuine friction. Seeing it now is the gift, this is a map, not a sentence.');
+
+  const topStrength = r.strengths[0];
+  const topGrowth = r.growth[0] || r.dimResults.slice().sort((a,b)=>a.val-b.val)[0];
+
+  const dimRows = r.dimResults.map(d=>{
+    const isS = d.verdict==='strength';
+    const barInner = r.solo
+      ? `<i style="width:${d.val}%;background:${dimColor(d.val)};"></i>`
+      : `<i style="width:${d.val}%;background:linear-gradient(90deg,var(--accent-2),${dimColor(d.val)});"></i>`;
+    const gapNote = r.solo? '' : (d.gap>28? `<div class="note">A noticeable difference between you here (${d.a} vs ${d.b}). Worth a conversation, not an alarm.</div>` : `<div class="note">You read closely on this (${d.a} vs ${d.b}).</div>`);
+    return `<div class="dim">
+      <div class="top"><span class="name">${d.name}</span>
+      <span class="verdict ${isS?'good':'watch'}">${isS?'Strength':'Tend to this'}</span></div>
+      <div class="bar">${barInner}</div>
+      ${gapNote}
+    </div>`;
+  }).join('');
+
+  render(`
+    <div class="section-label">${s.reportTitle} · ${s.title}</div>
+    <div class="band ${bandClass(r.overall)}">
+      <span class="stagetag">${r.solo?'Solo reading':'Compatibility'}</span>
+      <p class="score">${r.overall}<small>/100</small></p>
+      <h2>${headline}</h2>
+      <p>${lead}</p>
+    </div>
+
+    <div style="margin-bottom:8px;" class="section-label">How you read, dimension by dimension</div>
+    ${dimRows}
+    ${r.solo?'':`<div class="dim"><div class="top"><span class="name">Life direction</span><span class="verdict ${r.pullScore>=60?'good':'watch'}">${r.pullScore>=60?'Aligned':'Differs'}</span></div><div class="bar"><i style="width:${r.pullScore}%;background:linear-gradient(90deg,var(--accent-2),${dimColor(r.pullScore)});"></i></div><div class="note">${r.pullNote}</div></div>`}
+
+    <div style="height:14px"></div>
+    <div class="block good">
+      <h4>Where you are strong${r.solo?'':' together'}</h4>
+      <p>${topStrength? (r.solo? soloStrength(topStrength.key): r.strengthCopy[topStrength.key]) : 'Your steadiest quality is honesty about where you are, which is rarer than it sounds.'}</p>
+    </div>
+    <div class="block watch">
+      <h4>Worth being aware of</h4>
+      <p>${r.solo? soloGrowth(topGrowth.key): r.growthCopy[topGrowth.key]}</p>
+      <div class="convo">A conversation to have:  "${r.convoMap[topGrowth.key]}"</div>
+    </div>
+
+    <p class="verdict-note">${s.close[bw]}</p>
+
+    <div class="row" style="justify-content:center;">
+      <button class="btn btn-ghost" onclick="screenWelcome()">Try another stage</button>
+      <button class="btn btn-primary" onclick="restartSame()">Run this stage again</button>
+    </div>
+  `);
+}
+
+function soloStrength(k){
+  return ({
+    secure:'You bring steadiness. You can be a safe base for another person, which is the quiet engine of lasting love.',
+    repair:'You move toward repair. You would rather mend than win, which makes you easy to stay close to.',
+    coop:'You instinctively team up. Shared problems energise rather than threaten you.',
+    open:'You let yourself be seen. That courage shortens the years it takes a partner to truly know you.'
+  })[k];
+}
+function soloGrowth(k){
+  return ({
+    secure:'You can read silence or distance as threat. A partner who is steady and clear will bring out your best, an avoidant one will not.',
+    repair:'You can let hurts harden. Naming things sooner, even clumsily, will serve you more than waiting to be understood.',
+    coop:'Under strain you may retreat to solo mode. The partner for you is one who can coax you back onto the same side.',
+    open:'You keep the mask up a while. The right person earns the unguarded you, but giving a little sooner saves wasted time.'
+  })[k];
+}
+
+function restartSame(){state.answers={A:[],B:[]};state.who='A';state.idx=0;screenHandoff();}
+
+/* boot */
+screenWelcome();
+</script>
+</body>
+</html>

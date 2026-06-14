@@ -1,0 +1,104 @@
+KIN — BY THE SCHOOL OF LIFE
+Pitch document (text extracted from the visual deck, 19 pages). Confidential — May 2026.
+Tagline: "Meet and connect at depth."
+
+========================================
+THE IDEA
+========================================
+The need for a satisfying social life — lovers and friends — is overwhelming and powerful, and we are still failing badly on this front. The opportunity is enormous.
+
+The School of Life has spent 15 years thinking about how people connect at depth, and creating books, articles and conversation cards to help them do so.
+
+KIN is a pre-eminent digital tool to help people (a) MEET and (b) CONNECT AT DEPTH. The aim is to transform who meets whom, and what they do when they meet.
+
+Most apps only try to help people MEET. KIN's ambition is to help them meet AND influence what happens next. Two pillars:
+- 01 INTRODUCE — introduce people under a brand that signals depth, thoughtfulness, stylishness, intelligence.
+- 02 GUIDE — give them social scripts to guide them, so they know what to do once they have met. ("Ten fascinating people can gather for dinner with the best of intentions and yet a sincere, deep, fun interaction may elude them. People need a frame.")
+
+========================================
+ONBOARDING / PROFILE
+========================================
+"Let's build your profile — this is how others will see you." Prompts:
+1. Add a photo of you.
+2. Some books that feel meaningful to you.
+3. Something you find attractive.
+4. Words that resonate (chosen from a menu).
+5. Pick three adjectives others would kindly use to describe you.
+
+========================================
+WHAT DO YOU WANT FROM YOUR SOCIAL LIFE
+========================================
+Users pick no more than two of four "atmospheres". Each is available 1-1 or group, in person or virtual.
+
+- PLAY — an atmosphere of fun, levity, playfulness, silliness (of the best kind).
+- CONSOLATION — supportiveness, kindness, gentleness; sharing problems with people who know pain too. "Here we don't need to be completely OK. Hearing and being heard."
+- ANALYSIS — psychological exploration: what made us who we are? How did childhood influence adulthood? How do we function? Like the best kind of therapy.
+- LOVE — a date with a difference, where what counts is curiosity and psychological exploration. Looking for love perhaps, but not urgently or naively; keen first to understand what love is. "Dating for curious, psychologically alive people."
+
+If a user picks LOVE, they set preferences: gender, max distance, who they're looking for ("open to see / not sure yet"), and optional values & interests, lifestyle, children.
+
+========================================
+MATCHES
+========================================
+"Here are people who are also looking for the same kind of connection as you." Shown as in-person-near-you and virtual matches, each with name, age, distance, a short bio and value tags (e.g. Depth / Kindness / Serenity; Wisdom / Vulnerability / Nature). Virtual matches: "Open to meaningful conversations online."
+
+========================================
+ARRANGING A MEETING
+========================================
+In-person flow: connection confirmed -> set the times you're available -> see overlapping times -> choose meeting type -> choose meeting place (a safe, public meeting point) -> confirm -> added to your calendar.
+Virtual flow: same up to confirming a video room.
+
+========================================
+THE SOCIAL SCRIPT
+========================================
+Once a meeting is confirmed, a "Social Script" is prepared. It is:
+- Personal to your meeting (created just for you and your match).
+- Thoughtfully designed to help you connect in a natural, rewarding way.
+- Revealed 24 hours before the meeting.
+- Built around connection (encourages openness, curiosity, real conversation).
+- Flexible — follow it, adapt it, or go off script. "Yours to explore together."
+
+--- ANALYSIS EVENING (Script One) ---
+Overview stages: Warming Up (everyday catch-up; "What three very practical things are on your mind?") -> Big Serious Things (work, life, purpose, the bigger picture) -> Emotional Things.
+Example in-session prompts: "If I knew I couldn't fail I might…"; "What remains a really difficult emotion in your family?"; "The reasons why we're friends is…".
+
+--- PLAY (Script Two) ---
+"Tonight is about loosening up, being curious, and saying yes to a bit of delightful foolishness. There are no right answers. There is no winning. The only goal is connection through play."
+Games: name yourself after a silly thing you've done; The Awful Story Game (each person adds a line to the worst story ever); The Rude Sentence Game (charm someone into saying something very rude); The Animal Game (stay in character through a challenge); The Putting-on-Head Game; The Bad News Game (deliver an awful message while staying nice); The Boasting Game (top each other, ever more bombastic); The New Language Game (invent a language, make impassioned speeches). Finale: share one thing you enjoyed about someone. "Play opens us up. It helps us see each other. Play is serious business."
+
+--- LOVE (Script Three) ---
+A set of 52 conversation cards graded Easy / Medium / Hard, for two people.
+Timed arc: Welcome -> Easy Start (0–20 mins, light open getting-to-know-you) -> Deepening / Medium (20–60 mins, more revealing, a little braver) -> The Deep Self / Hard (60–100 mins, vulnerable, intimate, real) -> Discover & Laugh (100–110 mins, share highlights, two compliments — one on the mind, one on appearance) -> Close Gently (110–120 mins, a final question, leave with warmth).
+Example prompts — Easy: openers; Medium: "What happened on your first kiss?", "What's the saddest thing that's happened to you in love?", "What animal do you most identify with — and why?", "How do you like to be comforted when you are sad?"; Hard: "In what ways are you slightly mad (everyone is)?", "What do you think people often don't get right in their attitudes to sex?". Final prompt: "What would you love a kind person to come away thinking about you after they'd met you for the first time?"
+
+========================================
+MORE WAYS TO CONNECT (FEATURES)
+========================================
+1. Follow-up evenings — follow-up prompts based on your last conversation, to keep momentum (good for next dates or reunions).
+2. Personal Growth — courses and guides from The School of Life on love, friendship, communication and more.
+3. Practice Lab — practical tools and exercises for better relationships (e.g. communication skills, active listening).
+4. Insights & Reflections — personal reflections after your evenings; see patterns and growth over time; private, just for you.
+5. Group Spaces — create a space for your friend group; plan evenings, share wins and inside jokes.
+6. Community & Matches — curated events and mixers; match with people who share your values; friendship or more, your choice.
+9. Curated Content — live events, talks, salons and workshops from The School of Life, in person and online.
+10. Gift & Share — gift a pack or an evening (e.g. Play Pack, Love Pack).
+11. Offline Mode — download packs for offline use.
+12. A Lifelong Journey — "Every conversation is a chance to grow closer, understand more and live more fully. KIN is with you, every step of the way."
+Festivals & Retreats — weekend retreats and festivals of ideas; time to think, feel and connect.
+
+========================================
+THE COMMERCIAL STRUCTURE
+========================================
+FREE ("Experience it first"):
+- Create your profile
+- Browse people
+- Receive matches
+- Explore atmospheres (Play, Love, Analysis, Consolation)
+
+PAID ("To meet."):
+- Access to all social scripts
+- Priority matching
+- Virtual & in-person meetings
+- Full KIN Community access
+
+Made by The School of Life — "for deeper, happier lives."

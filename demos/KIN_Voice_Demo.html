@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KIN — by The School of Life · Voice Demo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
+  :root{
+    --ink:#23201c;--ink-soft:#5b554d;--cream:#f6f1e7;--cream-2:#efe7d8;--paper:#fffdf8;
+    --accent:#b5532f;--accent-2:#2f6d6a;--gold:#c8943b;--line:#e2d8c5;--good:#2f6d6a;--watch:#c8943b;
+    --soft-shadow:0 18px 50px -24px rgba(40,30,15,.45);--radius:18px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{font-family:'Inter',system-ui,sans-serif;background:radial-gradient(120% 120% at 50% 0%, #fbf7ee 0%, var(--cream) 55%, var(--cream-2) 100%);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:740px;margin:0 auto;padding:32px 22px 80px;}
+  .serif{font-family:'Fraunces',Georgia,serif;}
+  header.brand{display:flex;align-items:center;justify-content:space-between;padding:6px 2px 20px;}
+  .logo{font-family:'Fraunces',serif;font-weight:600;font-size:26px;letter-spacing:.18em;}
+  .logo small{display:block;font-family:'Inter',sans-serif;font-weight:500;letter-spacing:.22em;font-size:10px;color:var(--ink-soft);text-transform:uppercase;margin-top:3px;}
+  .tag-pill{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:var(--paper);}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--soft-shadow);padding:36px 32px;}
+  h1.hero{font-family:'Fraunces',serif;font-weight:500;font-size:38px;line-height:1.08;margin:6px 0 14px;letter-spacing:-.01em;}
+  .lede{font-size:16.5px;line-height:1.6;color:var(--ink-soft);max-width:56ch;}
+  .micro{font-size:12.5px;letter-spacing:.02em;color:var(--ink-soft);}
+  .section-label{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:12px;}
+
+  .steps{display:grid;gap:12px;margin:24px 0 6px;}
+  .step{display:flex;gap:15px;align-items:flex-start;border:1px solid var(--line);border-radius:13px;padding:16px 18px;background:var(--paper);}
+  .step .n{font-family:'Fraunces',serif;font-size:24px;color:var(--accent);min-width:26px;line-height:1;}
+  .step h3{margin:0 0 3px;font-family:'Fraunces',serif;font-weight:500;font-size:17px;}
+  .step p{margin:0;font-size:13.5px;color:var(--ink-soft);line-height:1.5;}
+
+  /* orb / avatar */
+  .stage-orb{display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:18px;}
+  .orb{width:96px;height:96px;border-radius:50%;position:relative;background:radial-gradient(circle at 32% 30%, #7fb7b2, var(--accent-2) 60%, #1f4e4b 100%);box-shadow:0 0 0 8px rgba(47,109,106,.12), inset 0 0 18px rgba(255,255,255,.25);animation:breathe 4s ease-in-out infinite;}
+  .orb.sam{background:radial-gradient(circle at 32% 30%, #e7a98c, var(--accent) 60%, #7c3318 100%);box-shadow:0 0 0 8px rgba(181,83,47,.12), inset 0 0 18px rgba(255,255,255,.25);}
+  .orb.speaking{animation:speak .5s ease-in-out infinite;}
+  .orb.listening{box-shadow:0 0 0 8px rgba(200,80,40,.18), inset 0 0 18px rgba(255,255,255,.25);}
+  .orb::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 65% 70%, rgba(255,255,255,.35), transparent 45%);}
+  @keyframes breathe{0%,100%{transform:scale(1);}50%{transform:scale(1.045);}}
+  @keyframes speak{0%,100%{transform:scale(1);}25%{transform:scale(1.08);}60%{transform:scale(.99);}}
+  .who-name{margin-top:14px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);}
+  .who-name b{display:block;font-family:'Fraunces',serif;font-weight:500;font-size:19px;letter-spacing:0;text-transform:none;color:var(--ink);margin-top:3px;}
+
+  .prog{display:flex;gap:6px;margin:0 0 22px;}
+  .prog span{height:4px;border-radius:3px;flex:1;background:var(--line);transition:.3s;}
+  .prog span.on{background:var(--accent);}.prog span.done{background:var(--accent-2);}
+
+  .speech{background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:18px;}
+  .speech .lbl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-2);font-weight:600;margin-bottom:7px;}
+  .speech p{margin:0;font-family:'Fraunces',serif;font-size:20px;line-height:1.34;color:var(--ink);}
+
+  .answerbox{display:flex;flex-direction:column;gap:12px;}
+  textarea.ans{width:100%;min-height:74px;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-family:'Inter',sans-serif;font-size:15px;color:var(--ink);background:var(--paper);line-height:1.5;}
+  textarea.ans:focus{outline:none;border-color:var(--accent-2);}
+  .ctrls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .mic{display:inline-flex;align-items:center;gap:9px;cursor:pointer;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:11px 18px;font-size:14px;font-weight:600;color:var(--ink);transition:.15s;}
+  .mic:hover{border-color:var(--accent);}
+  .mic.live{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .mic .glyph{width:11px;height:11px;border-radius:50%;background:var(--accent);}
+  .mic.live .glyph{background:#fff;animation:pulse .9s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+  .hint{font-size:12px;color:var(--ink-soft);}
+
+  .btn{cursor:pointer;border:none;border-radius:999px;padding:14px 28px;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;transition:.18s ease;}
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 12px 26px -12px rgba(181,83,47,.7);}
+  .btn-primary:hover{background:#9c4527;transform:translateY(-1px);}
+  .btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none;}
+  .btn-ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line);}
+  .btn-ghost:hover{border-color:var(--ink-soft);color:var(--ink);}
+  .row{display:flex;gap:12px;align-items:center;margin-top:22px;flex-wrap:wrap;}
+  .spacer{flex:1;}
+  .skip{background:none;border:none;color:var(--ink-soft);font-size:12.5px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+  .skip:hover{color:var(--accent);}
+  .backlink{background:none;border:none;color:var(--ink-soft);font-size:13px;cursor:pointer;padding:4px 0;margin-bottom:16px;}
+  .backlink:hover{color:var(--accent);}
+
+  .vbar{position:fixed;top:14px;right:16px;display:flex;gap:8px;align-items:center;z-index:30;}
+  .vtoggle{font-size:12px;border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:7px 13px;cursor:pointer;color:var(--ink-soft);}
+  .vtoggle.on{color:var(--accent-2);border-color:var(--accent-2);font-weight:600;}
+
+  /* clone card */
+  .clone-card{border:1px solid var(--line);border-radius:16px;padding:24px;background:linear-gradient(160deg,#fffdf8, #f3ecdd);}
+  .trait{margin-bottom:13px;}
+  .trait .top{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:6px;}
+  .trait .top b{font-family:'Fraunces',serif;font-weight:500;font-size:15px;}
+  .bar{height:8px;border-radius:6px;background:var(--cream-2);overflow:hidden;}
+  .bar i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent-2),var(--gold));}
+  .echo{font-style:italic;font-family:'Fraunces',serif;font-size:15px;color:var(--ink);line-height:1.5;margin-top:8px;}
+
+  /* date transcript */
+  .turns{display:flex;flex-direction:column;gap:12px;margin-bottom:8px;max-height:230px;overflow:auto;padding-right:4px;}
+  .turn{padding:11px 15px;border-radius:13px;font-size:14.5px;line-height:1.5;max-width:86%;}
+  .turn.sam{background:#fbeee6;border:1px solid #f0d9c9;align-self:flex-start;}
+  .turn.you{background:var(--cream);border:1px solid var(--line);align-self:flex-end;}
+  .turn .nm{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:3px;}
+
+  /* report */
+  .band{border-radius:16px;padding:26px;color:#fff;margin-bottom:22px;position:relative;overflow:hidden;background:linear-gradient(135deg,var(--accent-2),#21504e);}
+  .band.mid{background:linear-gradient(135deg,#3a7d79,#7a6a2f);}
+  .band.low{background:linear-gradient(135deg,#8a5a3c,#6d4a3a);}
+  .band .score{font-family:'Fraunces',serif;font-size:52px;line-height:1;margin:0;}
+  .band .score small{font-size:19px;opacity:.7;}
+  .band h2{font-family:'Fraunces',serif;font-weight:500;font-size:22px;margin:9px 0 8px;}
+  .band p{margin:0;font-size:14.5px;line-height:1.55;opacity:.95;max-width:50ch;}
+  .dim{margin-bottom:15px;}
+  .dim .top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+  .dim .name{font-family:'Fraunces',serif;font-size:16px;}
+  .dim .verdict{font-size:11.5px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
+  .dim .verdict.good{color:var(--good);}.dim .verdict.watch{color:var(--watch);}
+  .twin{display:flex;gap:8px;align-items:center;}
+  .twin .bar{flex:1;}
+  .twin .tag{font-size:10.5px;color:var(--ink-soft);min-width:30px;}
+  .block{border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:13px;background:var(--paper);}
+  .block h4{margin:0 0 7px;font-family:'Fraunces',serif;font-weight:500;font-size:17px;}
+  .block.good h4{color:var(--good);}.block.watch h4{color:#a9762a;}
+  .block p{margin:0;font-size:14px;line-height:1.55;color:var(--ink-soft);}
+  .block .convo{margin-top:9px;font-style:italic;color:var(--ink);font-family:'Fraunces',serif;font-size:15px;line-height:1.45;}
+  .verdict-note{font-size:13px;color:var(--ink-soft);text-align:center;margin:20px auto 4px;max-width:48ch;line-height:1.55;}
+
+  .fadein{animation:fade .45s ease;}@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  .footnote{text-align:center;font-size:11px;color:var(--ink-soft);margin-top:28px;letter-spacing:.03em;line-height:1.6;}
+  @media(max-width:560px){.card{padding:26px 19px;}h1.hero{font-size:31px;}}
+</style>
+</head>
+<body>
+<div class="vbar"><button id="vtoggle" class="vtoggle on" onclick="toggleVoice()">🔊 Voice on</button></div>
+<div class="wrap">
+  <header class="brand">
+    <div class="logo">KIN<small>by The School of Life</small></div>
+    <div class="tag-pill">Phase 1 · Voice prototype</div>
+  </header>
+  <div id="app"></div>
+  <div class="footnote">
+    We send a version of you on the first date, so the awkward one is optional.<br>
+    Internal concept prototype. Voice in and out is real. The understanding is simulated for the demo. The real build adds the psychology model and voice-emotion layer.
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   KIN voice demo — profiling (voice) -> your clone ->
+   you meet the match's clone (voice) -> pre-screen verdict.
+   Speech I/O is real (Web Speech API) with a text fallback.
+   Understanding is heuristic for the demo.
+============================================================ */
+
+let voiceOn = true;
+let kinVoice=null, samVoice=null;
+
+function loadVoices(){
+  if(!('speechSynthesis' in window)) return;
+  const vs = window.speechSynthesis.getVoices().filter(v=>/en(-|_)/i.test(v.lang)||/english/i.test(v.name));
+  if(!vs.length) return;
+  const pick=(names)=>vs.find(v=>names.some(n=>v.name.toLowerCase().includes(n)));
+  kinVoice = pick(['samantha','female','aria','jenny','google us']) || vs[0];
+  samVoice = pick(['daniel','male','guy','google uk english male','alex']) || vs[Math.min(1,vs.length-1)] || vs[0];
+}
+if('speechSynthesis' in window){ loadVoices(); window.speechSynthesis.onvoiceschanged=loadVoices; }
+
+function speak(text, who, onend){
+  if(!voiceOn || !('speechSynthesis' in window)){ if(onend) setTimeout(onend,150); return; }
+  try{
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    if(who==='sam'){ u.voice=samVoice; u.pitch=0.9; u.rate=0.98; }
+    else { u.voice=kinVoice; u.pitch=1.0; u.rate=0.98; }
+    const orb=document.querySelector('.orb');
+    if(orb){ orb.classList.add('speaking'); u.onend=()=>{orb.classList.remove('speaking'); if(onend)onend();}; }
+    else if(onend){ u.onend=onend; }
+    window.speechSynthesis.speak(u);
+  }catch(e){ if(onend) onend(); }
+}
+function stopSpeak(){ try{ if('speechSynthesis' in window) window.speechSynthesis.cancel(); }catch(e){} }
+function toggleVoice(){
+  voiceOn=!voiceOn;
+  const b=document.getElementById('vtoggle');
+  b.textContent = voiceOn?'🔊 Voice on':'🔇 Voice off';
+  b.classList.toggle('on',voiceOn);
+  if(!voiceOn) stopSpeak();
+}
+
+/* ---- speech recognition (push to talk) ---- */
+let recog=null, listening=false;
+function startListen(targetId){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const ta=document.getElementById(targetId);
+  const micBtn=document.getElementById('mic');
+  if(!SR){ if(ta){ ta.focus(); ta.placeholder='Voice input not available in this browser. Type your answer here.'; } return; }
+  if(listening){ try{recog.stop();}catch(e){} return; }
+  try{
+    recog=new SR(); recog.lang='en-GB'; recog.interimResults=true; recog.maxAlternatives=1;
+    let base = ta? ta.value : '';
+    recog.onstart=()=>{ listening=true; if(micBtn){micBtn.classList.add('live'); micBtn.querySelector('.txt').textContent='Listening… tap to stop';} const o=document.querySelector('.orb'); if(o)o.classList.add('listening'); stopSpeak(); };
+    recog.onresult=(e)=>{ let s=''; for(let i=0;i<e.results.length;i++) s+=e.results[i][0].transcript; if(ta) ta.value=(base?base+' ':'')+s; };
+    recog.onerror=()=>{ if(ta){ta.focus();} };
+    recog.onend=()=>{ listening=false; if(micBtn){micBtn.classList.remove('live'); micBtn.querySelector('.txt').textContent='Hold the mic';} const o=document.querySelector('.orb'); if(o)o.classList.remove('listening'); };
+    recog.start();
+  }catch(e){ if(ta) ta.focus(); }
+}
+
+/* ---- profile model ---- */
+let profile={warmth:50,security:50,repair:50,openness:50,pull:50};
+let themes=new Set();
+let lastEcho='';
+
+const KW={
+  warmth:['laugh','laughed','love','friend','friends','family','fun','together','happy','close','hug','people','dinner','cook','cooked','smile','joy','warm','party','celebrat'],
+  security_pos:['calm','steady','fine','okay','support','here for','safe','reassure','hold','solid','present','grounded','secure','at ease'],
+  security_neg:['worry','worried','anxious','anxiety','scared','panic','overthink','my fault','nervous','insecure','afraid','stress','stressed','on edge','spiral'],
+  repair_pos:['talk','talk it','sort','apolog','sorry','listen','work it out','make up','resolve','understand','reach out','reach back','come closer','closer'],
+  repair_neg:['argue','argument','fight','shout','silent','ignore','grudge','cold','walk away','walks away','storm off','shut down','snap','resent','stonewall'],
+  coop:['together','team','help','share','both','each other'],
+  open_pos:['honest','open','openly','vulnerable','tell','share','real me','quickly','straight away','let people in','wear my heart'],
+  open_neg:['alone','space','quiet','distance','distant','guard','guarded','private','walls','wall','withdraw','time alone','reserved','slow to','keep to myself','closed','shy','hide'],
+  pull_adv:['travel','change','ambition','ambitious','adventure','freedom','explore','world','career','new','grow','spontaneous','wing it','see where'],
+  pull_sec:['home','settle','settled','routine','stay','cosy','cozy','family','plan','map','prepared','stable','quiet life']
+};
+function bump(k,n){ profile[k]=Math.max(4,Math.min(96,profile[k]+n)); }
+function bumpPull(n){ profile.pull=Math.max(0,Math.min(100,profile.pull+n)); }
+function analyze(text){
+  const t=(' '+text+' ').toLowerCase();
+  const hit=(arr)=>arr.filter(w=>t.includes(w));
+  const w=hit(KW.warmth); w.length && (bump('warmth',7*Math.min(2,w.length)), w.forEach(x=>themes.add(x.trim())));
+  hit(KW.security_pos).forEach(()=>bump('security',7));
+  hit(KW.security_neg).forEach(()=>bump('security',-9));
+  hit(KW.repair_pos).forEach(()=>bump('repair',7));
+  hit(KW.repair_neg).forEach(()=>bump('repair',-10));
+  hit(KW.coop).forEach(()=>{bump('repair',3);bump('warmth',2);});
+  hit(KW.open_pos).forEach(()=>bump('openness',8));
+  hit(KW.open_neg).forEach(()=>bump('openness',-8));
+  hit(KW.pull_adv).forEach(()=>{bumpPull(7);themes.add('adventure');});
+  hit(KW.pull_sec).forEach(()=>bumpPull(-6));
+  // a low-warmth, low-content answer reads as guarded
+  if(text.trim().split(/\s+/).length<=6 && !w.length){ bump('openness',-4); bump('warmth',-3); }
+  const words=text.trim().split(/\s+/);
+  if(words.length>=3){ lastEcho = words.slice(0,14).join(' '); }
+}
+
+/* ---- seeded match ---- */
+const SAM = { name:'Sam', bio:'34, architect. Long walks, cooks for people, hopeless at small talk, very good in a crisis.',
+  s:{warmth:74,security:71,repair:70,openness:57,pull:38} };
+
+/* ---- flow ---- */
+const PROFILE_Q=[
+  {lbl:'Getting to know you', text:"Before anything else, tell me about a recent day that felt like a good one. What were you actually doing?"},
+  {lbl:'A strange little one', text:"Here is an odd one, do not think too hard. A couple set off on a long walk and the path disappears as it gets dark. What happens next?"},
+  {lbl:'When it is hard', text:"And when something hits you hard, properly hard, do you tend to come closer to people, or go quiet for a while first?"},
+];
+const DATE_Q=[
+  "So, I will be honest, doing this with a clone is a little strange and I quite like it. I am Sam. What is something that has made you laugh recently?",
+  "I love that. Okay, my kind of question. When a plan falls apart, are you more let us make a new plan, or more let us just see where this goes?",
+  "Noted, and I mean that warmly. Last one from me. What do most people get wrong about you when they first meet you?"
+];
+
+let idx=0, dateIdx=0, dateTurns=[];
+const app=document.getElementById('app');
+function render(html){ app.innerHTML=''; const d=document.createElement('div'); d.className='card fadein'; d.innerHTML=html; app.appendChild(d); }
+
+function screenWelcome(){
+  stopSpeak();
+  render(`
+    <div class="section-label">Meet and connect at depth</div>
+    <h1 class="hero">Send a version of you<br>on the first date.</h1>
+    <p class="lede">KIN talks with you, properly, and learns who you are beneath the first impression. Then it carries a version of you into a short conversation with someone you might be matched with, so you find out whether there is something real before the awkward, expensive first date.</p>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><div><h3>Kin gets to know you, by voice</h3><p>A short spoken conversation. Some of it open, some of it deliberately sideways, to reach past the version of yourself you show on a good day.</p></div></div>
+      <div class="step"><span class="n">2</span><div><h3>It composes your clone</h3><p>A profile of how you actually move through closeness, in your own words.</p></div></div>
+      <div class="step"><span class="n">3</span><div><h3>You meet their clone</h3><p>Five minutes with a version of your match. Then KIN tells you what it noticed, gently and honestly.</p></div></div>
+    </div>
+    <div class="row">
+      <button class="btn btn-primary" onclick="startProfiling()">Start talking</button>
+      <span class="hint">Best in Chrome. Allow the microphone when asked. You can type instead any time.</span>
+    </div>
+  `);
+}
+
+function startProfiling(){ profile={warmth:50,security:50,repair:50,openness:50,pull:50}; themes=new Set(); idx=0; screenProfileQ(); }
+
+function progressDots(n,total,extra){
+  return `<div class="prog">${Array.from({length:total},(_,i)=>`<span class="${i<n?'done':(i===n?'on':'')}"></span>`).join('')}</div>`;
+}
+
+function screenProfileQ(){
+  const Q=PROFILE_Q[idx];
+  render(`
+    <div class="stage-orb"><div class="orb"></div><div class="who-name">Your guide<b>Kin</b></div></div>
+    ${progressDots(idx, PROFILE_Q.length)}
+    <div class="speech"><div class="lbl">${Q.lbl} · ${idx+1} of ${PROFILE_Q.length}</div><p id="qtext">${Q.text}</p></div>
+    <div class="answerbox">
+      <textarea id="ans" class="ans" placeholder="Speak your answer, or type it here…"></textarea>
+      <div class="ctrls">
+        <button id="mic" class="mic" onclick="startListen('ans')"><span class="glyph"></span><span class="txt">Hold the mic</span></button>
+        <span class="hint">Say it out loud. Kin is listening.</span>
+        <span class="spacer"></span>
+        <button class="btn btn-primary" onclick="submitProfile()">Continue</button>
+      </div>
+    </div>
+    <div class="row"><span class="spacer"></span><button class="skip" onclick="skipProfiling()">skip to my clone ▸</button></div>
+  `);
+  speak(Q.text,'kin');
+}
+function submitProfile(){
+  const ta=document.getElementById('ans'); analyze(ta? ta.value:''); stopSpeak();
+  if(idx<PROFILE_Q.length-1){ idx++; screenProfileQ(); } else { screenBuilding(); }
+}
+function skipProfiling(){
+  // seed a plausible profile so the demo can jump ahead
+  profile={warmth:68,security:64,repair:66,openness:58,pull:46}; themes=new Set(['friends','travel']); lastEcho='a slow morning with good coffee and no rush'; screenBuilding();
+}
+
+function screenBuilding(){
+  stopSpeak();
+  render(`<div class="stage-orb"><div class="orb"></div><div class="who-name">Composing</div></div>
+    <h1 class="hero" style="text-align:center;font-size:26px;">Reading between your words…</h1>
+    <p class="lede" style="text-align:center;margin:0 auto;">Kin is turning what you said into a version of you it can carry into the room.</p>`);
+  speak('Give me a moment. I am turning what you said into a version of you.','kin');
+  setTimeout(screenClone, voiceOn? 2600: 1100);
+}
+
+function cloneEcho(){
+  const t=[...themes];
+  if(t.length){ return `You came alive talking about ${t.slice(0,2).join(' and ')}. ${lastEcho?('“'+lastEcho+'…” stayed with me.'):''}`; }
+  return lastEcho? `“${lastEcho}…” That told me more than you think.` : 'Quiet and considered. You give a little at a time, and mean it.';
+}
+function traitRows(s){
+  const rows=[['Warmth','warmth'],['Felt security','security'],['Repair after rupture','repair'],['Letting the mask drop','openness']];
+  return rows.map(([n,k])=>`<div class="trait"><div class="top"><b>${n}</b><span class="micro">${label(s[k])}</span></div><div class="bar"><i style="width:${s[k]}%"></i></div></div>`).join('');
+}
+function label(v){return v>=70?'Strong':v>=52?'Steady':v>=40?'Tender':'Guarded';}
+
+function screenClone(){
+  stopSpeak();
+  render(`
+    <div class="section-label">Your clone</div>
+    <div class="clone-card">
+      <div style="display:flex;gap:16px;align-items:center;margin-bottom:16px;">
+        <div class="orb" style="width:64px;height:64px;"></div>
+        <div><div class="serif" style="font-size:21px;">A version of you</div><div class="micro">Built from your own words, ready to meet someone.</div></div>
+      </div>
+      ${traitRows(profile)}
+      <div class="echo">${cloneEcho()}</div>
+    </div>
+    <p class="lede" style="margin-top:20px;">We have someone we think is worth a look. <b>${SAM.name}</b>, ${SAM.bio} Want to send your clone in to meet theirs?</p>
+    <div class="row">
+      <button class="btn btn-primary" onclick="startDate()">Meet ${SAM.name}'s clone</button>
+      <button class="skip" onclick="skipToVerdict()">skip to the verdict ▸</button>
+    </div>
+  `);
+  speak('Here is the version of you I built. And I have someone worth meeting. This is Sam.','kin');
+}
+
+function startDate(){ dateIdx=0; dateTurns=[]; screenDate(); }
+
+function screenDate(){
+  const samLine=DATE_Q[dateIdx];
+  dateTurns.push({who:'sam',text:samLine});
+  render(`
+    <div class="stage-orb"><div class="orb sam"></div><div class="who-name">You are meeting<b>${SAM.name}'s clone</b></div></div>
+    ${progressDots(dateIdx, DATE_Q.length)}
+    <div class="turns" id="turns">${renderTurns()}</div>
+    <div class="answerbox" style="margin-top:14px;">
+      <textarea id="ans" class="ans" placeholder="Reply to ${SAM.name}, out loud or typed…"></textarea>
+      <div class="ctrls">
+        <button id="mic" class="mic" onclick="startListen('ans')"><span class="glyph"></span><span class="txt">Hold the mic</span></button>
+        <span class="hint">Talk to them like a real first date.</span>
+        <span class="spacer"></span>
+        <button class="btn btn-primary" onclick="submitDate()">Reply</button>
+      </div>
+    </div>
+    <div class="row"><span class="spacer"></span><button class="skip" onclick="skipToVerdict()">end the date ▸</button></div>
+  `);
+  speak(samLine,'sam');
+}
+function renderTurns(){
+  return dateTurns.map(t=>`<div class="turn ${t.who}"><div class="nm">${t.who==='sam'?SAM.name:'You'}</div>${t.text}</div>`).join('');
+}
+function submitDate(){
+  const ta=document.getElementById('ans'); const v=ta? ta.value.trim():'';
+  if(v){ dateTurns.push({who:'you',text:v}); analyze(v); }
+  stopSpeak();
+  if(dateIdx<DATE_Q.length-1){ dateIdx++; screenDate(); }
+  else { screenDateEnd(); }
+}
+function screenDateEnd(){
+  stopSpeak();
+  render(`<div class="stage-orb"><div class="orb sam"></div><div class="who-name">${SAM.name}'s clone is forming an impression…</div></div>
+    <p class="lede" style="text-align:center;margin:0 auto;">Kin is comparing the two of you, where you would meet easily and where the real work would be.</p>`);
+  speak('That was lovely. Give me a second to tell you what I noticed.','sam');
+  setTimeout(screenVerdict, voiceOn? 2400: 1000);
+}
+function skipToVerdict(){ if(!dateTurns.length){ analyze('we laughed a lot about travel and friends, when plans fall apart i like to make a new plan together'); } screenVerdict(); }
+
+/* ---- verdict ---- */
+function clamp(v){return Math.max(4,Math.min(96,v));}
+function dimColor(v){return v>=66?'var(--good)':v>=46?'var(--gold)':'#b5703f';}
+function screenVerdict(){
+  stopSpeak();
+  const you=profile, sam=SAM.s;
+  const dims=[['Warmth','warmth'],['Felt security','security'],['Repair','repair'],['Openness','openness']];
+  let alignSum=0;
+  const rows=dims.map(([n,k])=>{
+    const gap=Math.abs(you[k]-sam[k]); const avg=(you[k]+sam[k])/2;
+    // reward the shared LEVEL of the good quality, with a softer penalty for distance
+    const dscore = clamp(avg*0.7 + (100-gap)*0.3);
+    const strong = avg>=58 && gap<=26;
+    alignSum += dscore*(1/dims.length);
+    return {n,k,you:you[k],sam:sam[k],strong,gap,dscore};
+  });
+  const pullGap=Math.abs(you.pull-sam.pull); const pullScore=clamp(100-pullGap*1.05);
+  const overall=Math.round(alignSum*0.84 + pullScore*0.16);
+  const bw = overall>=70?'high':overall>=55?'mid':'low';
+  const bandCls = overall>=70?'':overall>=55?'mid':'low';
+  const headline = overall>=70?'Worth the real date':overall>=55?'Promising, go in curious':'A real spark and real friction';
+  const lead = overall>=70? `On the things that wear couples down, you and ${SAM.name} meet easily. Not identical, which is healthier, but genuinely aligned where it counts.`
+            : overall>=55? `There is real warmth between your two clones, and a couple of honest places worth feeling out in person before you invest much.`
+            : `Something is clearly there, alongside some friction that is better known now than discovered three dates and a weekend away from now.`;
+  const strengths=rows.filter(r=>r.strong).sort((a,b)=>(b.you+b.sam)-(a.you+a.sam));
+  const growth=rows.filter(r=>!r.strong).sort((a,b)=>(a.you+a.sam)-(b.you+b.sam));
+  const top=strengths[0]||rows.sort((a,b)=>(b.you+b.sam)-(a.you+a.sam))[0];
+  const watch=growth[0]||rows.slice().sort((a,b)=>(a.you+a.sam)-(b.you+b.sam))[0];
+  const strongCopy={warmth:`Your clones warmed to each other fast. There is ease here, the thing you cannot manufacture.`,security:`You both offer steadiness. Neither of you reads the other as a threat, which is the quiet engine of lasting.`,repair:`You both move toward repair. Whatever goes wrong would get mended, not banked.`,openness:`You both let the mask slip relatively early, so the truth of you would arrive sooner than it usually does.`};
+  const watchCopy={warmth:`Warmth ran a little cool between you. Worth seeing if it is nerves or genuine distance when you actually meet.`,security:`Felt security is the place to watch. One of you can read distance as a threat, which quietly drains trust if unspoken.`,repair:`Repair is the work. The risk is not the disagreements, it is letting them harden instead of healing.`,openness:`Openness is the slow road here. If you both keep your best selves up, the real fit could stay hidden longer than is useful.`};
+  const convo={warmth:`What does feeling close actually look like for you day to day?`,security:`When you go quiet, what do you most want the other person to do?`,repair:`After a row, who reaches back first in your world?`,openness:`What is something people usually find out about you far too late?`};
+
+  const dimRows=rows.map(r=>`
+    <div class="dim">
+      <div class="top"><span class="name">${r.n}</span><span class="verdict ${r.strong?'good':'watch'}">${r.strong?'You meet here':'Tend to this'}</span></div>
+      <div class="twin"><span class="tag">You</span><div class="bar"><i style="width:${r.you}%;background:linear-gradient(90deg,var(--accent-2),${dimColor(r.you)})"></i></div></div>
+      <div class="twin" style="margin-top:5px;"><span class="tag">${SAM.name}</span><div class="bar"><i style="width:${r.sam}%;background:linear-gradient(90deg,#b5532f,${dimColor(r.sam)})"></i></div></div>
+    </div>`).join('');
+
+  render(`
+    <div class="section-label">Pre-screen · before you ever meet</div>
+    <div class="band ${bandCls}">
+      <p class="score">${overall}<small>/100</small></p>
+      <h2>${headline}</h2>
+      <p>${lead}</p>
+    </div>
+    <div class="section-label" style="margin-bottom:10px;">Where the two of you meet</div>
+    ${dimRows}
+    <div style="height:10px"></div>
+    <div class="block good"><h4>What KIN noticed</h4><p>${strongCopy[top.k]}</p></div>
+    <div class="block watch"><h4>Worth being aware of</h4><p>${watchCopy[watch.k]}</p><div class="convo">If you do meet, ask: “${convo[watch.k]}”</div></div>
+    <p class="verdict-note">We ran the date so the awkward one is optional. This is a signal, not a verdict. The decision, and the chemistry, are still gloriously yours.</p>
+    <div class="row" style="justify-content:center;">
+      <button class="btn btn-ghost" onclick="screenWelcome()">Start over</button>
+      <button class="btn btn-primary" onclick="startDate()">Meet ${SAM.name} again</button>
+    </div>
+  `);
+  speak(`${headline}. ${lead}`,'kin');
+}
+
+screenWelcome();
+</script>
+</body>
+</html>

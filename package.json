@@ -1,0 +1,9 @@
+{
+  "name": "kin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "First Dates — live Velma emotional-read prototype (frontend + key-holding backend proxy).",
+  "engines": {
+    "node": ">=18"
+  }
+}
