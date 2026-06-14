@@ -13,7 +13,7 @@ export const config = { api: { bodyParser: false } }; // we read the raw audio s
 
 const VELMA_BATCH = 'https://modulate-developer-apis.com/api/velma-2-batch';
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
-const MODEL = process.env.ANTHROPIC_MODEL || 'claude-haiku-4-5-20251001';
+const MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6';
 
 export default async function handler(req, res) {
   // Health check: lets the page show whether the server can see each key, without revealing them.
@@ -103,9 +103,10 @@ async function interpret(velma, llmKey) {
 
   // Try the configured model first, then fall back to known-good model ids.
   const models = [...new Set([MODEL,
+    'claude-sonnet-4-6',
     'claude-haiku-4-5-20251001',
-    'claude-3-5-haiku-20241022',
-    'claude-3-5-sonnet-20241022'].filter(Boolean))];
+    'claude-3-5-sonnet-20241022',
+    'claude-3-5-haiku-20241022'].filter(Boolean))];
 
   let lastErr = 'llm_failed';
   for (const model of models) {
