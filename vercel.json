@@ -2,11 +2,11 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "buildCommand": null,
-  "installCommand": null,
+  "installCommand": "npm install",
   "outputDirectory": ".",
   "functions": {
-    "api/analyze.js": {
-      "memory": 512
-    }
+    "api/analyze.js": { "memory": 1024, "maxDuration": 60 },
+    "api/synthesize.js": { "maxDuration": 60 },
+    "api/tts.js": { "maxDuration": 30 }
   }
 }
