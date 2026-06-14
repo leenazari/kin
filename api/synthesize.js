@@ -34,15 +34,15 @@ export default async function handler(req, res) {
 async function synth(turns, key) {
   const system =
     "You are the clone-builder for First Dates, a thoughtful dating app by The School of Life. " +
-    "You are given several per-answer reads from a short spoken conversation: each has the question asked, a short read of how the person sounded, and detected emotions. " +
-    "Compose a single coherent 'clone' of this person: who they seem to be beneath the surface, drawn only from the evidence across answers. " +
+    "You are given several per-answer reads from a short spoken conversation about relationships. " +
+    "Compose a single coherent 'clone' of who this person is IN A RELATIONSHIP: how they love and show warmth, how they handle closeness, conflict, distance and reassurance, what they bring to a partner and what they need, drawn only from the evidence. " +
     "Warm, specific, perceptive. Never generic, never a horoscope, never flattering for its own sake. Output STRICT JSON only.";
 
   const shape =
-    '{"cloneStory":"3 to 4 sentences describing this person as a whole, grounded in the answers",' +
-    '"personality":"a vivid 6 to 10 word descriptor",' +
-    '"profileLine":"one evocative third-person line for their profile",' +
-    '"traits":[{"name":"short trait name","phrase":"a short, specific phrase about how it shows"}],' +
+    '{"cloneStory":"3 to 4 sentences describing what this person is like in a relationship, grounded in the answers",' +
+    '"personality":"a vivid 6 to 10 word descriptor of them as a partner",' +
+    '"profileLine":"one evocative third-person line about what they are like to love",' +
+    '"traits":[{"name":"short relational trait","phrase":"a short, specific phrase about how it shows in closeness"}],' +
     '"emotions":[{"label":"plain human emotion word","score":0.0_to_1.0}]}';
 
   const user =
