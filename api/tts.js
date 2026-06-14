@@ -13,15 +13,30 @@ const VOICE_ID = process.env.ELEVENLABS_VOICE_ID || '21m00Tcm4TlvDq8ikWAM'; // "
 const TTS_MODEL = process.env.ELEVENLABS_MODEL || 'eleven_turbo_v2_5';
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'method_not_allowed' });
-    return;
-  }
   const key = process.env.ELEVENLABS_API_KEY;
-  if (!key) {
-    res.status(200).json({ configured: false });
+
+  // GET = diagnostic. Makes one tiny call so the exact ElevenLabs error is visible
+  // by just opening /api/tts in a browser. Does not return audio.
+  if (req.method === 'GET') {
+    if (!key) { res.status(200).json({ configured: false }); return; }
+    try {
+      const r = await fetch('https://api.elevenlabs.io/v1/text-to-speech/' + VOICE_ID, {
+        method: 'POST',
+        headers: { 'xi-api-key': key, 'content-type': 'application/json', 'accept': 'audio/mpeg' },
+        body: JSON.stringify({ text: 'Hello.', model_id: TTS_MODEL }),
+      });
+      let detail = '';
+      if (!r.ok) detail = (await r.text()).slice(0, 300);
+      res.status(200).json({ configured: true, voiceId: VOICE_ID, model: TTS_MODEL, ttsOk: r.ok, status: r.status, detail });
+    } catch (e) {
+      res.status(200).json({ configured: true, error: String((e && e.message) || e) });
+    }
     return;
   }
+
+  if (req.method !== 'POST') { res.status(405).json({ error: 'method_not_allowed' }); return; }
+  if (!key) { res.status(200).json({ configured: false }); return; }
+
   try {
     let body = req.body;
     if (typeof body === 'string') { try { body = JSON.parse(body); } catch (e) { body = {}; } }
