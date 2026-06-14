@@ -116,11 +116,12 @@
 
 const ANALYZE_URL = '/api/analyze';
 const SYNTH_URL = '/api/synthesize';
+const TTS_URL = '/api/tts';
 
 const STEPS = [
-  { text: "Tell me about a recent day that genuinely felt like a good one." },
-  { followup: true, fallback: "And when that day was at its best, who were you with?" },
-  { text: "Here is an odd one, do not think too hard. A couple set out on a long walk and the path disappears as it gets dark. What happens next?" }
+  { text: "Think of a relationship that really mattered to you. At your best in it, what were you like to be with?" },
+  { followup: true, fallback: "And when you care about someone, how do they usually know it?" },
+  { text: "When someone you love goes quiet or pulls away, what happens in you, and what do you do?" }
 ];
 
 let stepIdx = 0, turns = [], lastFollowUp = '', flowLive = false;
@@ -136,8 +137,30 @@ function setBadge(live){ const b=document.getElementById('badge'); b.classList.t
 let voiceOn=true, kinVoice=null;
 function loadVoices(){ if(!('speechSynthesis' in window)) return; const vs=speechSynthesis.getVoices().filter(v=>/en(-|_)/i.test(v.lang)||/english/i.test(v.name)); if(vs.length){ kinVoice = vs.find(v=>/samantha|female|aria|jenny|google us/i.test(v.name)) || vs[0]; } }
 if('speechSynthesis' in window){ loadVoices(); speechSynthesis.onvoiceschanged=loadVoices; }
-function speak(text,onend){
-  if(!voiceOn || !('speechSynthesis' in window)){ if(onend) setTimeout(onend,150); return; }
+let currentAudio=null;
+async function speak(text,onend){
+  stopSpeak();
+  if(!voiceOn || !text){ if(onend) setTimeout(onend,120); return; }
+  let settled=false; const finish=(cb)=>{ if(settled) return; settled=true; if(cb) cb(); else if(onend) onend(); };
+  // Prefer a natural ElevenLabs voice from the server; fall back to the browser voice.
+  try{
+    const res=await fetch(TTS_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
+    const ct=res.headers.get('content-type')||'';
+    if(res.ok && ct.indexOf('audio')>=0){
+      const url=URL.createObjectURL(await res.blob());
+      const a=new Audio(url); currentAudio=a;
+      const orb=document.querySelector('.orb'); if(orb) orb.classList.add('speaking');
+      const cleanup=()=>{ const o=document.querySelector('.orb'); if(o) o.classList.remove('speaking'); URL.revokeObjectURL(url); if(currentAudio===a) currentAudio=null; };
+      a.onended=()=>{ cleanup(); finish(); };
+      a.onerror=()=>{ cleanup(); finish(()=>browserSpeak(text,onend)); };
+      try{ await a.play(); }catch(e){ cleanup(); finish(()=>browserSpeak(text,onend)); }
+      return;
+    }
+  }catch(e){}
+  finish(()=>browserSpeak(text,onend));
+}
+function browserSpeak(text,onend){
+  if(!voiceOn || !('speechSynthesis' in window)){ if(onend) onend(); return; }
   try{
     speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(text); if(kinVoice) u.voice=kinVoice; u.rate=.98; u.pitch=1.0;
@@ -146,7 +169,7 @@ function speak(text,onend){
     speechSynthesis.speak(u);
   }catch(e){ if(onend) onend(); }
 }
-function stopSpeak(){ try{ if('speechSynthesis' in window) speechSynthesis.cancel(); }catch(e){} }
+function stopSpeak(){ if(currentAudio){ try{currentAudio.pause();}catch(e){} currentAudio=null; } try{ if('speechSynthesis' in window) speechSynthesis.cancel(); }catch(e){} }
 function toggleVoice(){ voiceOn=!voiceOn; document.getElementById('vtog').textContent = voiceOn?'🔊 Voice on':'🔇 Voice off'; if(!voiceOn) stopSpeak(); }
 
 /* ---------- screens ---------- */
@@ -155,8 +178,8 @@ function screenWelcome(){
   render(`
     <div class="orb"></div>
     <div class="kicker" style="text-align:center;">Building your clone</div>
-    <h1 class="t" style="text-align:center;">Let's talk for a few minutes</h1>
-    <p class="body" style="text-align:center;">I'll ask you a few questions, some ordinary and one a little unexpected. Just talk to me as you would a thoughtful friend, and I'll build a version of you from how you sound.</p>
+    <h1 class="t" style="text-align:center;">Let's talk about how you love</h1>
+    <p class="body" style="text-align:center;">I'll ask you a few questions about who you are in relationships. Just talk to me as you would a thoughtful friend, and I'll build a version of you from how you sound, not only what you say.</p>
     <div class="stack">
       <button class="btn btn-primary" onclick="beginFlow()">Start talking</button>
       <button class="btn btn-soft" onclick="runSampleFlow()">Run a sample conversation</button>
@@ -327,7 +350,7 @@ function screenClone(c){
   render(`
     <div class="kicker">${flowLive?'Built live from your voice':'Sample clone'}</div>
     <h1 class="t">Your clone</h1>
-    <p class="body">A version of you, built from how you sounded across the conversation. This is what would go and meet people on your behalf.</p>
+    <p class="body">A version of you in relationships, built from how you sounded across the conversation. This is what would go and meet people on your behalf.</p>
     <div class="chips" style="margin-bottom:14px;">${chips}</div>
     <div class="profile">
       <div class="head"><div class="pic">${manPortrait()}</div><div><div class="nm">Alex</div><div class="sub">Built from ${turns.length} answers, by how you sound</div></div></div>
@@ -386,7 +409,7 @@ async function checkServer(){
   try{
     const r=await fetch(ANALYZE_URL); const d=await r.json();
     const el=document.getElementById('srv'); if(!el) return;
-    if(d && d.velmaKey){ el.textContent='Server ready · Velma key detected'+(d.llmKey?' · Claude key detected':' · no Claude key (richer read off)'); el.style.color='var(--good)'; }
+    if(d && d.velmaKey){ el.textContent='Server ready · Velma'+(d.llmKey?' · Claude':' · no Claude')+(d.ttsKey?' · ElevenLabs voice':' · browser voice'); el.style.color='var(--good)'; }
     else { el.textContent='Server has no Velma key — add MODULATE_API_KEY in Vercel, then redeploy'; el.style.color='#a9762a'; }
   }catch(e){}
 }
