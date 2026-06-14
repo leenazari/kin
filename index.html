@@ -369,6 +369,7 @@ function screenResult(){
   const {payload:p,live,errMsg,interpErr,duration}=lastResult;
   const chips=p.emotions.slice(0,4).map(e=>`<span class="chip">${e.label}<span class="lvl"><i style="width:${Math.round(e.score*100)}%"></i></span></span>`).join('');
   const note=p._note || ((p.behaviors[0]||{}).name) || 'how you speak says as much as what you say';
+  const voiceLine = p._personality || (p.emotions.slice(0,3).map(e=>e.label).join(', ')) || note;
   render(`
     <div class="kicker">${live?'Live read from Velma':'Simulated read'}</div>
     <h1 class="t">What your voice carried</h1>
@@ -386,8 +387,7 @@ function screenResult(){
       </div>
       <div class="bd">
         <div class="echo">"${cap(note)}."</div>
-        <div class="qrow"><div class="qn">In words</div><div class="qp">Warm, loyal, a little slow to show the whole of yourself.</div></div>
-        <div class="qrow"><div class="qn">In your voice <span class="newtag">new</span></div><div class="qp">${cap(note)}.</div></div>
+        <div class="qrow"><div class="qn">In your voice <span class="newtag">new</span></div><div class="qp">${cap(voiceLine)}</div></div>
       </div>
     </div>
     <div class="stack">
