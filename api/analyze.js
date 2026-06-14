@@ -95,7 +95,8 @@ async function interpret(velma, llmKey) {
     '{"emotions":[{"label":"plain human emotion word","score":0.0_to_1.0}],' +
     '"story":"2 to 3 sentences on how they sounded and what it gently suggests about them, specific and grounded",' +
     '"personality":"a vivid 6 to 10 word personality descriptor",' +
-    '"profileLine":"one short third-person line for their profile, e.g. Lights up talking about the people they love"}';
+    '"profileLine":"one short third-person line for their profile, e.g. Lights up talking about the people they love",' +
+    '"followUp":"a warm, specific one-sentence follow-up question that gently digs deeper into what they just said"}';
 
   const user =
     'Velma output (JSON):\n' + JSON.stringify(velma).slice(0, 12000) +
