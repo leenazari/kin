@@ -229,13 +229,14 @@ function screenAnalyzing(){
 
 async function analyze(blob){
   state='analyzing'; screenAnalyzing();
-  let payload=null, live=false, errMsg='';
+  let payload=null, live=false, errMsg='', interpErr='';
   if(blob){
     try{
       const res=await fetch(ANALYZE_URL,{method:'POST',headers:{'Content-Type': blob.type||'audio/webm'},body:blob});
       const data=await res.json().catch(()=>({}));
       if(res.ok && data.configured && data.velma){
-        payload = (data.interpreted && data.interpreted.story) ? fromInterpreted(data.interpreted) : normalize(data.velma);
+        if(data.interpreted && data.interpreted.story){ payload=fromInterpreted(data.interpreted); }
+        else { payload=normalize(data.velma); interpErr=data.interpErr||'no interpretation returned'; }
         live=true;
       }
       else if(res.ok && data.configured===false){ errMsg=''; }              // no key on server yet, simulate quietly
@@ -244,7 +245,7 @@ async function analyze(blob){
   }
   if(!payload){ payload=simulate(); live=false; }
   setBadge(live);
-  lastResult={payload,live,errMsg,duration:recSeconds||payload._dur||19};
+  lastResult={payload,live,errMsg,interpErr,duration:recSeconds||payload._dur||19};
   setTimeout(()=>screenResult(), live?100:1100);
 }
 
@@ -365,13 +366,14 @@ function manPortrait(){
   </svg>`;
 }
 function screenResult(){
-  const {payload:p,live,errMsg,duration}=lastResult;
+  const {payload:p,live,errMsg,interpErr,duration}=lastResult;
   const chips=p.emotions.slice(0,4).map(e=>`<span class="chip">${e.label}<span class="lvl"><i style="width:${Math.round(e.score*100)}%"></i></span></span>`).join('');
   const note=p._note || ((p.behaviors[0]||{}).name) || 'how you speak says as much as what you say';
   render(`
     <div class="kicker">${live?'Live read from Velma':'Simulated read'}</div>
     <h1 class="t">What your voice carried</h1>
     ${errMsg?`<div class="err">The live read did not go through (${errMsg}). Showing a simulated read instead.</div>`:''}
+    ${interpErr?`<div class="err">Richer read unavailable (${interpErr}). Showing the basic read.</div>`:''}
     <div class="chips" style="margin-bottom:8px;">${chips}</div>
     <div class="sectlabel">The story of this answer</div>
     <p class="story">${p._story ? p._story : buildStory(p,duration,live)}</p>
