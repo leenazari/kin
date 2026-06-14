@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     form.append('upload_file', new Blob([audio], { type: contentType }), 'reply.webm');
     // Enable Velma's acoustic emotion + accent read (both off in the default config).
     // emotion_signal classifies the feeling from the SOUND of the voice, not the words.
-    const velmaConfig = { stt: { emotion_signal: true, accent_signal: true } };
+    const velmaConfig = { stt: { emotion_signal: true } };
     form.append('config', JSON.stringify(velmaConfig));
 
     const velmaRes = await fetch(VELMA_BATCH, {
@@ -91,7 +91,7 @@ async function interpret(velma, llmKey) {
     "You are the voice-analysis interpreter for First Dates, a thoughtful dating app by The School of Life. " +
     "Everything you write is about who this person is IN A RELATIONSHIP: what they are like to be close to, how they show love and warmth, how they handle conflict, distance and reassurance, what they bring to a partner and what they may need. " +
     "You receive JSON from Velma, a model that analyses HOW someone sounds. Each clip carries an 'emotion' field, which is Velma's acoustic read of the voice (for example Affectionate, Calm, Hopeful, Anxious, Content, Sad), produced from the sound itself and not from the words. " +
-    "Treat that per-clip 'emotion' field as your PRIMARY signal. LEAD with what those emotion signals reveal about them as a partner. The transcript is only context for how they sounded, it is NOT something to paraphrase. Do not just restate what they said in nicer words, read the feeling underneath it. " +
+    "Treat that per-clip 'emotion' field as your PRIMARY signal. Read like a perceptive therapist in session: the richest insight is in the RELATIONSHIP between how they sounded and what they said. Where tone and words agree it is sincere; where they diverge (upbeat words in an anxious or sad voice, calm words carrying longing, reassurance said tensely) that gap is where the real feeling lives. Name what they feel but may not be saying directly. Never just paraphrase the words. " +
     "Write a warm, precise, specific relational read. Prefer concrete, human language over vague clinical words like 'measured' or 'guarded' unless the data clearly demands them. " +
     "Be insightful and a little generous, but never flattering for its own sake, never a horoscope, never wishy-washy. Output STRICT JSON only, no prose or code fences.";
 
