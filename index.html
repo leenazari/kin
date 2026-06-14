@@ -318,7 +318,12 @@ async function screenSynth(){
   speak('Give me a moment. I am turning all of that into a version of you.');
   let clone=null;
   try{
-    const payload = { turns: turns.map(t=>({ question:t.q, story:t.payload._story||'', personality:t.payload._personality||'', profileLine:t.payload._note||'', emotions:(t.payload.emotions||[]).map(e=>e.label) })) };
+    const payload = { turns: turns.map(t=>{
+      const v = t.raw && t.raw.velma;
+      const transcript = (v && v.clips) ? v.clips.map(c=>c.text).join(' ') : '';
+      const acousticEmotion = (v && v.clips) ? v.clips.map(c=>c.emotion).filter(Boolean).join(', ') : '';
+      return { question:t.q, transcript, acousticEmotion, story:t.payload._story||'', personality:t.payload._personality||'', profileLine:t.payload._note||'', emotions:(t.payload.emotions||[]).map(e=>e.label) };
+    }) };
     const res=await fetch(SYNTH_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     const data=await res.json().catch(()=>({}));
     if(res.ok && data.clone && data.clone.cloneStory) clone=data.clone;
