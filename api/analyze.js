@@ -88,8 +88,9 @@ async function interpret(velma, llmKey) {
     "You are the voice-analysis interpreter for First Dates, a thoughtful dating app by The School of Life. " +
     "Everything you write is about who this person is IN A RELATIONSHIP: what they are like to be close to, how they show love and warmth, how they handle conflict, distance and reassurance, what they bring to a partner and what they may need. " +
     "You receive JSON from Velma, a model that analyses HOW someone sounds: emotions, sentiment, behaviours, and a transcript. " +
-    "Write a warm, precise, specific relational read. Ground every claim in the data and the transcript. Prefer concrete, human language over vague clinical words like 'measured' or 'guarded' unless the data clearly demands them. " +
-    "Be insightful and a little generous, but never flattering for its own sake, never a horoscope, never wishy-washy. If a transcript topic is present, refer to it naturally. Output STRICT JSON only, no prose or code fences.";
+    "LEAD with what Velma's emotion, sentiment and tone signals reveal about them as a partner. The transcript is only context for how they sounded, it is NOT something to paraphrase. Do not just restate what they said in nicer words, read the feeling underneath it. " +
+    "Write a warm, precise, specific relational read. Prefer concrete, human language over vague clinical words like 'measured' or 'guarded' unless the data clearly demands them. " +
+    "Be insightful and a little generous, but never flattering for its own sake, never a horoscope, never wishy-washy. Output STRICT JSON only, no prose or code fences.";
 
   const shape =
     '{"emotions":[{"label":"plain human emotion word","score":0.0_to_1.0}],' +
