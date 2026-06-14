@@ -6,7 +6,7 @@
 // -> { configured:true, error:"..." }             (synthesis failed -> frontend aggregates client-side)
 
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
-const MODEL = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6';
+const MODEL = process.env.ANTHROPIC_MODEL || 'claude-opus-4-8';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -33,11 +33,11 @@ export default async function handler(req, res) {
 
 async function synth(turns, key) {
   const system =
-    "You are the clone-builder for First Dates, a thoughtful dating app by The School of Life. " +
-    "You are given several per-answer reads from a short spoken conversation about relationships. " +
-    "Compose a single coherent 'clone' of who this person is IN A RELATIONSHIP: how they love and show warmth, how they handle closeness, conflict, distance and reassurance, what they bring to a partner and what they need, drawn only from the evidence. " +
-    "Base the read on the emotional and tonal signals across the answers, the feeling underneath the words, not a paraphrase of what they said. " +
-    "Warm, specific, perceptive. Never generic, never a horoscope, never flattering for its own sake. Output STRICT JSON only.";
+    "You are the clone-builder for First Dates, by The School of Life, working with the emotional intelligence of a skilled therapist. " +
+    "For each answer you get: the question, what they SAID (transcript), how they SOUNDED (acousticEmotion, Velma's read of the voice itself), and a short per-answer read. " +
+    "Build a portrait of who this person is IN A RELATIONSHIP by reading between the lines. The most revealing signal is the relationship between voice and words: where the acoustic emotion matches the words it is sincere, and especially where it diverges (warm words in an anxious voice, calm words carrying longing, reassurance said tensely) that gap is where the truth lives. Name what they feel but do not directly say. " +
+    "Cover how they love and show warmth, how they handle closeness, conflict, distance and reassurance, what they quietly protect, what they long for, what they bring to a partner and what they need. " +
+    "Compassionate but honest. Specific, never generic, never a horoscope, never flattering for its own sake. Output STRICT JSON only.";
 
   const shape =
     '{"cloneStory":"3 to 4 sentences describing what this person is like in a relationship, grounded in the answers",' +
@@ -47,14 +47,15 @@ async function synth(turns, key) {
     '"emotions":[{"label":"plain human emotion word","score":0.0_to_1.0}]}';
 
   const user =
-    'Conversation reads (JSON):\n' + JSON.stringify(turns).slice(0, 12000) +
+    'Per-answer data (question, transcript = words said, acousticEmotion = how the voice sounded, story = a short read):\n' +
+    JSON.stringify(turns).slice(0, 14000) +
     '\n\nReturn ONLY JSON in exactly this shape, with 3 traits and up to 4 emotions:\n' + shape;
 
   const models = [...new Set([MODEL,
+    'claude-opus-4-8',
     'claude-sonnet-4-6',
     'claude-haiku-4-5-20251001',
-    'claude-3-5-sonnet-20241022',
-    'claude-3-5-haiku-20241022'].filter(Boolean))];
+    'claude-3-5-sonnet-20241022'].filter(Boolean))];
 
   let lastErr = 'synth_failed';
   for (const model of models) {
