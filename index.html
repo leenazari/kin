@@ -95,6 +95,7 @@
     <div class="logo">First Dates<small>by The School of Life</small></div>
     <div id="badge" class="badge"><span class="dot"></span><span id="badgetext">Simulated</span></div>
   </header>
+  <div id="srv" class="hint" style="text-align:center;margin:0 0 12px;min-height:16px;"></div>
   <div id="app"></div>
   <div class="footnote">
     Live Velma read when the server is configured with a key, otherwise a clearly labelled simulated read. Microphone capture is real.<br>
@@ -233,7 +234,10 @@ async function analyze(blob){
     try{
       const res=await fetch(ANALYZE_URL,{method:'POST',headers:{'Content-Type': blob.type||'audio/webm'},body:blob});
       const data=await res.json().catch(()=>({}));
-      if(res.ok && data.configured && data.velma){ payload=normalize(data.velma); live=true; }
+      if(res.ok && data.configured && data.velma){
+        payload = (data.interpreted && data.interpreted.story) ? fromInterpreted(data.interpreted) : normalize(data.velma);
+        live=true;
+      }
       else if(res.ok && data.configured===false){ errMsg=''; }              // no key on server yet, simulate quietly
       else { errMsg=(data&&(data.detail||data.error))||('server '+res.status); }
     }catch(e){ errMsg=String(e.message||e); }
@@ -247,6 +251,15 @@ async function analyze(blob){
 function useSample(){
   state='analyzing'; screenAnalyzing(); setBadge(false);
   setTimeout(()=>{ lastResult={payload:simulate(),live:false,errMsg:'',duration:18}; screenResult(); },1300);
+}
+
+// Claude's interpreted read -> our render shape
+function fromInterpreted(i){
+  return {
+    emotions:(i.emotions||[]).filter(e=>e&&e.label).map(e=>({label:e.label,score:typeof e.score==='number'?e.score:0.65})),
+    topics:[], behaviors:[], sentiment:0.5,
+    _story:i.story, _note:i.profileLine||i.personality, _personality:i.personality
+  };
 }
 // normalize a Velma-2 batch response (defensive: fields may vary) into our shape
 function normalize(j){
@@ -361,7 +374,7 @@ function screenResult(){
     ${errMsg?`<div class="err">The live read did not go through (${errMsg}). Showing a simulated read instead.</div>`:''}
     <div class="chips" style="margin-bottom:8px;">${chips}</div>
     <div class="sectlabel">The story of this answer</div>
-    <p class="story">${buildStory(p,duration,live)}</p>
+    <p class="story">${p._story ? p._story : buildStory(p,duration,live)}</p>
     ${live?'':`<p class="hint" style="text-align:left;margin:9px 0 0;">Simulated reads describe delivery and tone only. A live Velma read would also ground this in what you actually said.</p>`}
     <div class="sectlabel">Added to your profile</div>
     <div class="profile">
@@ -384,7 +397,15 @@ function cap(s){ s=String(s||''); return s.charAt(0).toUpperCase()+s.slice(1); }
 function fmt(s){ const m=Math.floor(s/60); const r=s%60; return m+':'+(r<10?'0':'')+r; }
 
 /* boot */
-screenAsk(); setBadge(false);
+async function checkServer(){
+  try{
+    const r=await fetch(ANALYZE_URL); const d=await r.json();
+    const el=document.getElementById('srv'); if(!el) return;
+    if(d && d.velmaKey){ el.textContent='Server ready · Velma key detected'+(d.llmKey?' · Claude key detected':' · no Claude key (richer read off)'); el.style.color='var(--good)'; }
+    else { el.textContent='Server has no Velma key — add MODULATE_API_KEY in Vercel, then redeploy'; el.style.color='#a9762a'; }
+  }catch(e){}
+}
+screenAsk(); setBadge(false); checkServer();
 </script>
 </body>
 </html>
