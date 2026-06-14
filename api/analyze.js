@@ -68,19 +68,26 @@ export default async function handler(req, res) {
     const contentType = req.headers['content-type'] || 'audio/webm';
     const cfg = velmaConfigObj();
 
-    // Prefer streaming (per-utterance emotion). Fall back to batch on any issue.
+    // Batch is the reliable path and is the default. Streaming (per-utterance emotion)
+    // is opt-in via the VELMA_STREAMING=1 env var, because a long-lived WebSocket inside a
+    // serverless function can hang and time out the whole request. When on, it still falls
+    // back to batch if streaming does not produce clips.
     let velma;
     try {
-      velma = await velmaStreaming(audio, key, cfg);
-      if (!velma.clips || !velma.clips.length) throw new Error('stream_no_clips');
-    } catch (streamErr) {
-      try {
+      if (process.env.VELMA_STREAMING === '1') {
+        try {
+          velma = await velmaStreaming(audio, key, cfg);
+          if (!velma.clips || !velma.clips.length) throw new Error('stream_no_clips');
+        } catch (streamErr) {
+          velma = await velmaBatch(audio, contentType, key, cfg);
+          velma.__stream_fallback = String((streamErr && streamErr.message) || streamErr);
+        }
+      } else {
         velma = await velmaBatch(audio, contentType, key, cfg);
-        velma.__stream_fallback = String((streamErr && streamErr.message) || streamErr);
-      } catch (batchErr) {
-        res.status(502).json({ error: 'velma_failed', detail: String((batchErr && batchErr.message) || batchErr) });
-        return;
       }
+    } catch (velmaErr) {
+      res.status(502).json({ error: 'velma_failed', detail: String((velmaErr && velmaErr.message) || velmaErr) });
+      return;
     }
 
     let interpreted = null, interpErr;
@@ -104,7 +111,7 @@ async function velmaStreaming(audio, key, cfg) {
     const out = { __source: 'streaming', duration_ms: 0, clips: [], behaviors: [], conversation_type_pick: null, participant_role_picks: [], topics: [], topic_sentiments: [], summary: '' };
     let settled = false, ws;
     const finish = (err) => { if (settled) return; settled = true; clearTimeout(timer); try { ws && ws.close(); } catch (e) {} err ? reject(err) : resolve(out); };
-    const timer = setTimeout(() => finish(out.clips.length ? null : new Error('stream_timeout')), 30000);
+    const timer = setTimeout(() => finish(out.clips.length ? null : new Error('stream_timeout')), 15000);
     try {
       ws = new WS(VELMA_STREAM + '?api_key=' + encodeURIComponent(key));
     } catch (e) { finish(new Error('ws_connect_failed')); return; }
